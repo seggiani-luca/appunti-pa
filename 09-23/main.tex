@@ -248,7 +248,7 @@ Oggi questo tipo di uso è in declino, ma il linguaggio Java rimane estremamente
 Possiamo individuare alcune versioni di rilevo dello standard Java.
 \begin{itemize}
 	\item Nel 1996 viene lanciata la JDK 1.0 (\textit{Java Development Kit}), prima versione del linguaggio;
-	\item Nel 1998 viene lanciata la J2SE 1.2, da cui la denominazione \textit{Java 2}, rimasta fino alla 5.0 del 2004 (fra l'altro slegata dalla versione precedente, la 1.4);
+	\item Nel 1998 viene lanciata la J2SE 1.2, da cui la denominazione \textit{Java 2}, rimasta fino alla 5.0 del 2004 (fra l'altro slegata in nome dalla versione precedente, la 1.4);
 	\item Dal 2006 vengono usate le denominazioni Java SE 6 e successive, ed è stato adottato un modello di rilascio periodico (da Java SE 9 annuale).
 		Questo è più o meno in corrispondenza dell'acquisto da parte di Oracle di Sun Microsystems, avvenuto nel 2010 (la prima versione lanciata sotto la Oracle fu Java SE 7).
 \end{itemize}
@@ -260,19 +260,19 @@ Nel progetto originale della Sun Microsystems erano previste più \textit{edizio
 	\item Java \textbf{EE}, cioè \textit{Enterprise Edition}, che mirava a piattaforme distribuite e in rete.
 \end{itemize}
 
-Java è fornito sia come \textbf{JDK} (come già detto \textit{Java Development Kit}), comprensiva di compilatore e strumenti di sviluppo, che come \textbf{JRE} (\textit{Java Runtime Environment}), pensata solo per l'esecuzione di applicazioni già sviluppate.
+Java è fornito sia come \textbf{JDK} (come già detto \textit{Java Development Kit}), comprensivo di compilatore e strumenti di sviluppo, che come \textbf{JRE} (\textit{Java Runtime Environment}), pensato solo per l'esecuzione di applicazioni già sviluppate.
 
-Notiamo poi che noi useremo la piattaforma \textbf{OpenJDK}, implementazione open source del JDK lanciata da Sun Microsystems nel 2006, prima dell'acquisizione da parte di Oracle, e ancora oggi mantenuta da Oracle ma comunque open source. 
+Notiamo poi che noi useremo la piattaforma \textbf{OpenJDK}, implementazione open source del JDK lanciata da Sun Microsystems nel 2006, prima dell'acquisizione da parte di Oracle, e ancora oggi mantenuta da Oracle ma comunque mantenuta open source. 
 
 \subsubsection{Natura del Java}
 I design goal di Java sono i seguenti: 
 \begin{itemize}
 	\item Semplice, paradigma orientato agli oggetti e familiare per gli sviluppatori di linguaggi precedenti (si pensi alla famiglia C/C++, con cui condivide sintassi e diversi costrutti);
 	\item Robusto e sicuro, in particolare riguardo alla memoria (non sono presenti meccanismi come i puntatori, e la gestione della memoria è quindi \textit{sicura} e largamente fuori dalle mani del programmatore);
-	\item \textit{Architecture-neutral}, cioè neutrale all'architettura e portatile su una vasta gamma di piattaforme (come già detto, paradigma \textit{WORA}). In questo, la specifica non contiene ambiguità (i tipi, ad esempio, sono standardizzati in dimensioni, a differenza del C++ che è \textit{platform-dependant}).
+	\item \textit{Architecture-neutral}, cioè neutrale all'architettura e portatile su una vasta gamma di piattaforme (come già detto, paradigma \textit{WORA}). In questo, la specifica non contiene ambiguità (i tipi, ad esempio, sono standardizzati in dimensioni, a differenza del C++ che è \textit{platform-dependent}).
 
 		Il codice sorgente Java viene compilato nel cosiddetto \textbf{bytecode}, una sorta di codice macchina che viene eseguito sulla \textbf{JVM}, una macchina virtuale basata sullo \textit{stack} piuttosto che su \textit{registri}, e agnostica al livello fisico sottostante;
-	\item Alte prestazioni, difficili da ottenere a causa della sua natura sostanzialmente interpretata, ma comunque quasi paragonabili nelle ultime versioni a codice scritto con linguaggi come C/C++, sopratutto nel caso di costrutti di ripetizione massicci.
+	\item Alte prestazioni, difficili da ottenere a causa della sua natura sostanzialmente interpretata, ma comunque quasi paragonabili nelle ultime versioni a codice scritto con linguaggi come C/C++, sopratutto nel caso di codice che viene ripetuto molte volte.
 		Questo è reso possibile anche dall'uso di tecnologie di compilazione \textbf{JIT} (compilazione \textit{Just In Time}).
 
 		Come nota storica, vediamo che sono state sviluppate implementazioni hardware della JVM, oggi non più particolarmente in voga;
@@ -281,7 +281,7 @@ I design goal di Java sono i seguenti:
 
 Abbiamo quindi che le differenza principali fra i linguaggi C/C++ a cui siamo abituati e il Java sono:
 \begin{itemize}
-	\item La natura dinamica del Java;
+	\item La natura dinamica del Java (anche le classi possono essere caricate a tempo di esecuzione);
 	\item Il supporto nativo per il multithreading, che in Java è praticamente immediato, mentre in C++ richiede API e tecniche di programmazione considerevolmente più complesse.
 \end{itemize}
 
@@ -290,9 +290,9 @@ Un caso di applicazione di Java degno di nota è quello dello sviluppo di applic
 
 Android era infatti fornito nelle prime versioni della macchina virtuale \textbf{Dalvik}, basata sui registri, che esegue codice Java compilato in un bytecode apposito, appunto il codice \textit{Dalvik} (da cui \lstinline|.dex|, \textit{Dalvin EXecutable}).
 
-Il supporto per la macchina Dalvik è rimasto in Android fino alla versione 4.4 \textit{KitKat}, ed è stato seguito nella 5.0 \textit{Lollipop} da \textbf{ART} \textit{Android RunTime}, che usa lo stesso bytecode e gli stessi eseguibili, ma con diverse ottimizzazioni.
+Il supporto per la macchina Dalvik è rimasto in Android fino alla versione 4.4 \textit{KitKat}, ed è stato seguito nella 5.0 \textit{Lollipop} da \textbf{ART} (\textit{Android RunTime}), che usa lo stesso bytecode e gli stessi eseguibili, ma con diverse ottimizzazioni.
 
-Notiamo poi che oggi (dal 2019) Android è una piattaforma \textit{Kotlin-first}, cioè orientata al linguaggio successore del Java, il \textbf{Kotlin}.
+Notiamo poi che oggi (dal 2019) Android è una piattaforma \textit{Kotlin-first}, cioè orientata al linguaggio "successore" del Java, il \textbf{Kotlin}.
 
 \subsection{Ciao mondo in Java}
 Possiamo quindi vedere il nostro primo programma di esempio in Java.
@@ -304,8 +304,15 @@ class Main {
 }
 \end{lstlisting}
 
-Vediamo come tutto sta necessariamente dentro una classe, qui la classe \lstinline|Main|, che definisce un metodo, qui il metodo \lstinline|main|.
-Queesto metodo è specifico (come il \lstinline|main()| del C/C++) e ha come argomenti la lista degli argomenti programma \lstinline|String[] args|, dove le quadre definiscono un'array come per la normale sintassi c-like.
+Vediamo come tutto sta necessariamente dentro una classe, qui la classe \lstinline|Main|, che definisce un metodo, qui il metodo \lstinline|main()|.
+
+Questo metodo è specifico (come il \lstinline|main()| del C/C++), viene eseguito quando la classe che lo possiede è invocata come programma, e ha come argomento la lista degli argomenti programma \lstinline|String[] args|, dove le quadre definiscono un'array come per la normale sintassi c-like.
+Inoltre, il metodo \lstinline|main()| è dichiarato come:
+\begin{itemize}
+	\item \lstinline|public|, cioè chiunque può invocarlo;
+	\item \lstinline|static|, cioè appartiene alla definizione di classe stessa, e non ad una particolare istanza di classe.
+\end{itemize}
+
 Da qui usiamo la funzione di libreria \lstinline|println| per stampare un messaggio a video.
 
 Possiamo compilare questo codice inserendolo in un file col nome della classe definita, \lstinline|Main.java|, e compilare come:
@@ -323,31 +330,60 @@ notando che si riporta solo il nome della classe, senza l'estensione \lstinline|
 Il Java è un linguaggio fortemente tipizzato dove ogni oggetto ha un tipo.
 In particolare notiamo fra tipi \textbf{primitivi} e di \textbf{riferimento}.
 
+\newpage
+
 \begin{itemize}
-	\item I tipi \textbf{primitivi} sono i classici tipi di dato presenti negli altri linguaggi:
+	\item I tipi \textbf{primitivi} sono i classici tipi di dato disponibili negli altri linguaggi:
 \begin{lstlisting}[language=java, style=codestyle]	
 int x;
 float y = 5.6;
 double pippo = 3.2 + Math.sqrt(7.4);
 int i1, i2, i3;
 char a = 'a';
-String s = "Also try Kotlin";
+// String s = "Also try Kotlin";
+/* const int VAL; no ! */ 
+static final int VAL; // e' effettivamente costante
 \end{lstlisting}
+La lista completa dei tipi è la seguente:
+	\begin{table}[H]
+		\center \rowcolors{2}{white}{black!10}
+		\begin{tabular} { c | c }
+			\bfseries Tipo & \bfseries Descrizione \\
+			\hline
+			\lstinline|boolean| & Un booleano \lstinline|true| o \lstinline|false| \\ 
+			\lstinline|char| & Un carattere, cioè un \textit{codepoint} UTF-16 su 16 bit \\ 
+			\lstinline|byte| & Un intero su 8 bit \\ 
+			\lstinline|short| & Un intero su 16 bit \\ 
+			\lstinline|int| & Un intero su 32 bit \\ 
+			\lstinline|long| & Un intero su 64 bit \\ 
+			\lstinline|float| & Un numero in virgola mobile su 32 bit come definito da IEEE 754 \\ 
+			\lstinline|double| & Un numero in virgola mobile su 64 bit come definito da IEEE 754 \\ 
+		\end{tabular}
+	\end{table}
 		Notiamo innanzitutto che il Java adotta la codifica UTF-8 per le stringhe e UTF-16 per i caratteri. Ricordiamo poi che, come già detto, i tipi del Java (ad esempio i tipi numerici) hanno dimensione fissata dalla specifica e non \textit{platform-specific}.
 
-		# riporta lista completa tipi 
+	Vediamo poi che la parola chiave \lstinline|const| non è implementata in Java (anche se è comunque riservata), mentre sono disponibili le parole chiave \lstinline|static| e \lstinline|final|. In particolare questa assegna a variabili valori finali, cioè che non possono più essere alterati.
 
-		Vediamo poi che la parola chiave \lstinline|const| non è implementata in Java, mentre sono disponibili le parole chiave \lstinline|static| e \lstinline|final|. In particolare questa assegna a variabili valori finali, cioè che non possono più essere alterati.
+	I valori non inizializzati in Java vengono lasciati in uno stato \lstinline|undefined|, possono restare tali fino alla definizione, ma se si prova ad usarli prima il compilatore lancia un errore.
 
-	Sono previste conversioni implicite fra tipi primitivi secondo i meccanismi che ci aspettiamo:
+	Per ogni tipo primitivo esiste poi un corrispondente \textit{tipo oggetto}, cioè sostanzialmente una classe \textit{wrapper} per quel tipo di primitivo. 
 
-	# riporta schema conversioni fra tipi
+	\par\medskip
+	\textbf{\textsf{Conversioni fra tipi}} \\
+	\noindent
+	La conversione fra tipi primitivi e oggetto corrispondenti è automatica.
+	Sono poi previste le conversioni implicite fra tipi primitivi secondo i meccanismi che ci aspettiamo:
 
-	Per effettuare cast nelle direzioni opposte a quelle previste dalle conversioni implicite si usano le conversioni espliciti secondo la solita sintassi:
+	\begin{center}	
+		\includegraphics[scale=0.3]{../figures/conversioni_implicite.png}
+	\end{center}
+
+	Per effettuare cast nelle direzioni opposte a quelle previste dalle conversioni implicite si usano le conversioni esplicite secondo la solita sintassi:
 \begin{lstlisting}[language=java, style=codestyle]	
-float c;
-int d = (int) c;
-\end{lstlisting} # verifica esempio
+float pi = 3.14;
+int engineer_pi = (int) pi; // engineer_pi = 3
+\end{lstlisting}
+
 	\item I tipi di \textbf{riferimento} comprendono:
 		\begin{itemize}
 			\item Array;
@@ -360,13 +396,75 @@ int d = (int) c;
 Il Java comprende tutti i costrutti condizionali e di ripetizione a cui siamo abituati.
 Notiamo in particolare la presenza del costrutto \textit{for-each} disponibile come:
 \begin{lstlisting}[language=java, style=codestyle]	
-for(tipo variabile : set_expression) {
-	// ripete
+for(tipo variabile : espressione_insieme) {
+	// corpo
 }
 \end{lstlisting}
 che itera sugli elementi dell'oggetto \lstinline|set_expression| instanziandoli ogni volta nell'oggetto \lstinline|variabile|.
 
-# costrutti ?
+Vediamo quindi tutti i costrutti disponibili:
+
+\noindent
+\begin{minipage}[t]{0.45\textwidth}
+\begin{table}[H]
+	\center 
+	\begin{tabular} { c | p{.1cm} p{5cm} }
+		\bfseries Costrutto & \bfseries Sintassi \\ 
+		\hline 
+\lstinline|if-else| & & \begin{lstlisting}[language=java, style=codestyle]	
+if(espressione) {
+	// vera
+} else {
+	// falsa
+}
+\end{lstlisting} \\
+\lstinline|switch| & & \begin{lstlisting}[language=java, style=codestyle]	
+switch(espressione) {
+	case a: // caso a
+	case b: // caso b
+	// ...
+	default: // caso default
+}
+\end{lstlisting} \\
+\lstinline|while| & & \begin{lstlisting}[language=java, style=codestyle]	
+while(espressione) {
+	// corpo
+}
+\end{lstlisting} \\
+\lstinline|do-while| & & \begin{lstlisting}[language=java, style=codestyle]	
+do {
+	// corpo
+} while(espressione);
+\end{lstlisting} \\
+	\end{tabular}
+\end{table}
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.45\textwidth}
+\begin{table}[H]
+	\center 
+	\begin{tabular} { c | p{.1cm} p{5cm} }
+		\bfseries Costrutto & \bfseries Sintassi \\ 
+		\hline 
+\lstinline|for| & & \begin{lstlisting}[language=java, style=codestyle]	
+for(espressione; espressione; espressione) {
+	// corpo
+}
+\end{lstlisting} \\
+\lstinline|for-each| & & \begin{lstlisting}[language=java, style=codestyle]	
+for(tipo variabile : espressione_insieme) {
+	// corpo
+}
+\end{lstlisting} \\
+\lstinline|break| & & \begin{lstlisting}[language=java, style=codestyle]	
+break;
+\end{lstlisting} \\
+\lstinline|continue| & & \begin{lstlisting}[language=java, style=codestyle]	
+continue;
+\end{lstlisting} \\
+	\end{tabular}
+\end{table}
+\end{minipage}
 
 \subsubsection{Classe \lstinline|System|}
 \lstinline|System| è una classe delle librerie Java dotata di 3 campi per la gestione degli stream di I/O:
@@ -391,7 +489,7 @@ import java.util.Scanner;
 In Java \textit{tutto} il codice è dentro classi.
 Una classe contiene:
 \begin{itemize}
-	\item La definizione della struttura degli oggetti della classe attraverso le \textit{variabili istanza};
+	\item La definizione della struttura degli oggetti della classe attraverso le \textit{variabili istanza} (o \textbf{membri});
 	\item I meccanismi per la costruzione di oggetti (\textbf{costruttori});
 	\item Codice che manipola gli oggetti (\textbf{metodi} e non \textit{funzioni}).
 \end{itemize}
