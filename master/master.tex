@@ -21,9 +21,9 @@
 \usepackage{karnaugh-map}
 
 % imposta il titolo
-\title{Appunti title-tag}
-\author{author-tag}
-\date{year-tag}
+\title{Appunti Programmazione Avanzata}
+\author{Luca Seggiani}
+\date{2025}
 
 % imposta lo stile
 % usa helvetica
@@ -222,13 +222,11 @@
 \makeatother
 
 \begin{document}
-% sezione (data)
-\section{Lezione del date-tag}
 
-% stili pagina
-\thispagestyle{empty}
 \pagestyle{fancy}
+\thispagestyle{empty}
+\renewcommand{\thispagestyle}[1]{}
 
-% testo
-
-
+\maketitle
+\input{../09-23/main.tex}
+\end{document}
