@@ -489,9 +489,14 @@ import java.util.Scanner;
 In Java \textit{tutto} il codice è dentro classi.
 Una classe contiene:
 \begin{itemize}
-	\item La definizione della struttura degli oggetti della classe attraverso le \textit{variabili istanza} (o \textbf{membri});
-	\item I meccanismi per la costruzione di oggetti (\textbf{costruttori});
-	\item Codice che manipola gli oggetti (\textbf{metodi} e non \textit{funzioni}).
+	\item La definizione della struttura degli oggetti (istanze) della classe attraverso le \textit{variabili istanza};
+	\item La definizione della struttura dei dati comuni ad ogni classe attraverso le \textit{variabili classe}.
+\end{itemize}
+Queste strutture vengono definite con:
+\begin{itemize}
+	\item Variabili possedute dalla classe (\textbf{membri});
+	\item Codice che manipola gli oggetti, o in particolare i membri di classe (\textbf{metodi} e non \textit{funzioni});
+	\item I meccanismi per la costruzione di oggetti (\textbf{costruttori}).
 \end{itemize}
 
 Una classe in Java si istanzia sempre con la parola chiave \lstinline|new|, in quanto non si possono allocare classi Java sullo stack, solo sull'heap.
