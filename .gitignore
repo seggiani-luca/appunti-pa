@@ -26,3 +26,6 @@
 
 #ignora file relativi a xournal++
 *.autosave.*
+
+# il master si genra a parte
+/master
