@@ -1,0 +1,380 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[a4paper, margin=8em]{geometry}
+
+% usa i pacchetti per la scrittura in italiano
+\usepackage[french,italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\frenchspacing 
+
+% usa i pacchetti per la formattazione matematica
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+
+% usa altri pacchetti
+\usepackage{gensymb}
+\usepackage{hyperref}
+\usepackage{standalone}
+
+\usepackage{colortbl}
+
+\usepackage{xstring}
+\usepackage{karnaugh-map}
+
+% imposta il titolo
+\title{Appunti Programmazione Avanzata}
+\author{Luca Seggiani}
+\date{2025}
+
+% imposta lo stile
+% usa helvetica
+\usepackage[scaled]{helvet}
+% usa palatino
+\usepackage{palatino}
+% usa un font monospazio guardabile
+\usepackage{lmodern}
+
+\renewcommand{\rmdefault}{ppl}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\ttdefault}{lmtt}
+
+% circuiti
+\usepackage{circuitikz}
+\usetikzlibrary{babel}
+
+% testo cerchiato
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+% disponi il titolo
+\makeatletter
+\renewcommand{\maketitle} {
+	\begin{center} 
+		\begin{minipage}[t]{.8\textwidth}
+			\textsf{\huge\bfseries \@title} 
+		\end{minipage}%
+		\begin{minipage}[t]{.2\textwidth}
+			\raggedleft \vspace{-1.65em}
+			\textsf{\small \@author} \vfill
+			\textsf{\small \@date}
+		\end{minipage}
+		\par
+	\end{center}
+
+	\thispagestyle{empty}
+	\pagestyle{fancy}
+}
+\makeatother
+
+% disponi teoremi
+\usepackage{tcolorbox}
+\newtcolorbox[auto counter, number within=section]{theorem}[2][]{%
+	colback=blue!10, 
+	colframe=blue!40!black, 
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries, 
+	title=Teorema~\thetcbcounter: #2, 
+	#1
+}
+
+% disponi definizioni
+\newtcolorbox[auto counter, number within=section]{definition}[2][]{%
+	colback=red!10,
+	colframe=red!40!black,
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries,
+	title=Definizione~\thetcbcounter: #2,
+	#1
+}
+
+% disponi codice
+\usepackage{listings}
+\usepackage[table]{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{codestyle}{
+		backgroundcolor=\color{black!5}, 
+		commentstyle=\color{codegreen},
+		keywordstyle=\bfseries\color{magenta},
+		numberstyle=\sffamily\tiny\color{black!60},
+		stringstyle=\color{green!50!black},
+		basicstyle=\ttfamily\footnotesize,
+		breakatwhitespace=false,         
+		breaklines=true,                 
+		captionpos=b,                    
+		keepspaces=true,                 
+		numbers=left,                    
+		numbersep=5pt,                  
+		showspaces=false,                
+		showstringspaces=false,
+		showtabs=false,                  
+		tabsize=2
+}
+
+\lstdefinestyle{shellstyle}{
+		backgroundcolor=\color{black!5}, 
+		basicstyle=\ttfamily\footnotesize\color{black}, 
+		commentstyle=\color{black}, 
+		keywordstyle=\color{black},
+		numberstyle=\color{black!5},
+		stringstyle=\color{black}, 
+		showspaces=false,
+		showstringspaces=false, 
+		showtabs=false, 
+		tabsize=2, 
+		numbers=none, 
+		breaklines=true
+}
+
+
+\lstdefinelanguage{assembler}{ 
+  keywords={AAA, AAD, AAM, AAS, ADC, ADCB, ADCW, ADCL, ADD, ADDB, ADDW, ADDL, AND, ANDB, ANDW, ANDL,
+        ARPL, BOUND, BSF, BSFL, BSFW, BSR, BSRL, BSRW, BSWAP, BT, BTC, BTCB, BTCW, BTCL, BTR, 
+        BTRB, BTRW, BTRL, BTS, BTSB, BTSW, BTSL, CALL, CBW, CDQ, CLC, CLD, CLI, CLTS, CMC, CMP,
+        CMPB, CMPW, CMPL, CMPS, CMPSB, CMPSD, CMPSW, CMPXCHG, CMPXCHGB, CMPXCHGW, CMPXCHGL,
+        CMPXCHG8B, CPUID, CWDE, DAA, DAS, DEC, DECB, DECW, DECL, DIV, DIVB, DIVW, DIVL, ENTER,
+        HLT, IDIV, IDIVB, IDIVW, IDIVL, IMUL, IMULB, IMULW, IMULL, IN, INB, INW, INL, INC, INCB,
+        INCW, INCL, INS, INSB, INSD, INSW, INT, INT3, INTO, INVD, INVLPG, IRET, IRETD, JA, JAE,
+        JB, JBE, JC, JCXZ, JE, JECXZ, JG, JGE, JL, JLE, JMP, JNA, JNAE, JNB, JNBE, JNC, JNE, JNG,
+        JNGE, JNL, JNLE, JNO, JNP, JNS, JNZ, JO, JP, JPE, JPO, JS, JZ, LAHF, LAR, LCALL, LDS,
+        LEA, LEAVE, LES, LFS, LGDT, LGS, LIDT, LMSW, LOCK, LODSB, LODSD, LODSW, LOOP, LOOPE,
+        LOOPNE, LSL, LSS, LTR, MOV, MOVB, MOVW, MOVL, MOVSB, MOVSD, MOVSW, MOVSX, MOVSXB,
+        MOVSXW, MOVSXL, MOVZX, MOVZXB, MOVZXW, MOVZXL, MUL, MULB, MULW, MULL, NEG, NEGB, NEGW,
+        NEGL, NOP, NOT, NOTB, NOTW, NOTL, OR, ORB, ORW, ORL, OUT, OUTB, OUTW, OUTL, OUTSB, OUTSD,
+        OUTSW, POP, POPL, POPW, POPB, POPA, POPAD, POPF, POPFD, PUSH, PUSHL, PUSHW, PUSHB, PUSHA, 
+				PUSHAD, PUSHF, PUSHFD, RCL, RCLB, RCLW, MOVSL, MOVSB, MOVSW, STOSL, STOSB, STOSW, LODSB, LODSW,
+				LODSL, INSB, INSW, INSL, OUTSB, OUTSL, OUTSW
+        RCLL, RCR, RCRB, RCRW, RCRL, RDMSR, RDPMC, RDTSC, REP, REPE, REPNE, RET, ROL, ROLB, ROLW,
+        ROLL, ROR, RORB, RORW, RORL, SAHF, SAL, SALB, SALW, SALL, SAR, SARB, SARW, SARL, SBB,
+        SBBB, SBBW, SBBL, SCASB, SCASD, SCASW, SETA, SETAE, SETB, SETBE, SETC, SETE, SETG, SETGE,
+        SETL, SETLE, SETNA, SETNAE, SETNB, SETNBE, SETNC, SETNE, SETNG, SETNGE, SETNL, SETNLE,
+        SETNO, SETNP, SETNS, SETNZ, SETO, SETP, SETPE, SETPO, SETS, SETZ, SGDT, SHL, SHLB, SHLW,
+        SHLL, SHLD, SHR, SHRB, SHRW, SHRL, SHRD, SIDT, SLDT, SMSW, STC, STD, STI, STOSB, STOSD,
+        STOSW, STR, SUB, SUBB, SUBW, SUBL, TEST, TESTB, TESTW, TESTL, VERR, VERW, WAIT, WBINVD,
+        XADD, XADDB, XADDW, XADDL, XCHG, XCHGB, XCHGW, XCHGL, XLAT, XLATB, XOR, XORB, XORW, XORL},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{\#},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{language=java, style=codestyle}
+
+% disponi sezioni
+\usepackage{titlesec}
+
+\titleformat{\section}
+	{\sffamily\Large\bfseries} 
+	{\thesection}{1em}{} 
+\titleformat{\subsection}
+	{\sffamily\large\bfseries}   
+	{\thesubsection}{1em}{} 
+\titleformat{\subsubsection}
+	{\sffamily\normalsize\bfseries} 
+	{\thesubsubsection}{1em}{}
+
+% tikz
+\usepackage{tikz}
+
+% float
+\usepackage{float}
+
+% grafici
+\usepackage{pgfplots}
+\pgfplotsset{width=10cm,compat=1.9}
+
+% disponi alberi
+\usepackage{forest}
+
+\forestset{
+	rectstyle/.style={
+		for tree={rectangle,draw,font=\large\sffamily}
+	},
+	roundstyle/.style={
+		for tree={circle,draw,font=\large}
+	}
+}
+
+% disponi algoritmi
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\makeatletter
+\renewcommand{\ALG@name}{Algoritmo}
+\makeatother
+
+% disponi numeri di pagina
+\usepackage{fancyhdr}
+\fancyhf{} 
+\fancyfoot[L]{\sffamily{\thepage}}
+
+\makeatletter
+\fancyhead[L]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@title \ \@date}}} 
+\fancyhead[R]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@author}}}
+\makeatother
+
+\begin{document}
+% sezione (data)
+\section{Lezione del 30-09-25}
+
+% stili pagina
+\thispagestyle{empty}
+\pagestyle{fancy}
+
+% testo
+\subsection{Metodo main}
+L'entrypoint di un programma in Java è il metodo \lstinline|main()| (dichiarato \lstinline|public| e \lstinline|static|), definito all'interno della classe \lstinline|Main| (dichiarata \lstinline|public|).
+
+\lstinline|main()| ha solitamente come argomenti l'array di riferimenti a \lstinline|String| detta \lstinline|args|, che contiene gli argomenti con cui è stato chiamato il programma.
+
+L'esempio tipico sarà quindi:
+\begin{lstlisting}[language=java, style=codestyle]	
+public class Main() {
+	public static void main(String[] args) {
+		// entrypoint del programma 
+	}
+}
+\end{lstlisting}
+
+Si possono avere più di un metodo \lstinline|main()| finché se ne definisce uno per ogni classe (ergo possono esistere classi non \lstinline|Main| che possiedono un metodo \lstinline|main()|).
+
+Questo può essere utile a elaborare (in maniera non proprio strutturata) test intermedi sulle classi che si implementano.
+
+Un altro caso utile può essere nel caso di applicazioni che implementano più modalità di esecuzione (magari GUI e CLI), dove ogni \lstinline|main()| corrisponde ad una certa modalità.
+
+\subsection{Ereditarietà}
+Il Java, essendo un linguagio OOP, implementa l'\textbf{ereditarietà} delle classi: si può definire una classe come \textit{figlia} di un altra, e in questo caso ne \textit{eredità} campi e metodi.
+
+Per fare questo si usa la parola chiave \lstinline|extends|:
+\begin{lstlisting}[language=java, style=codestyle]	
+class Animal {
+	// implementazione di Animal
+}
+
+class Dog extends Animal {
+	// implementazione di Dog
+}
+\end{lstlisting}
+
+Una limitazione è che una classe figlia può avere una sola classe padre (a differenza di linguaggi come il C++). Vedremo che per replicare la solita funzionalità si usano le \textit{interfacce}.
+
+La relazione che viene stabilita quando si usa il meccanismo dell'ereditarietà è quella dell'\textit{"è un"}, cioè con riferimento all'esempio sopra, un \lstinline|Dog| \textit{è un} \lstinline|Animal|.
+
+La definizione della classe figlia verrà quindi fatta in base alle \textit{differenze} con la classe padre, cioè ridefinendo i campi del padre o aggiungendone altri.
+I campi privati vengono ereditati, ma la classe figlia non può accedervi.
+
+Per rappresentare le gerarchie di classi graficamente si usano diagrammi di gerarchia come il seguente:
+\begin{center}
+	\begin{forest}
+		[Animal, rectstyle
+			[Dog
+				[Bulldog]
+				[Chihuaha]
+				[Hound]
+			]
+			[Bear]
+			[Axolotl]
+		]	
+	\end{forest}
+\end{center}
+dove la relazione \textit{"è un"} si svolge dall'alto verso il basso.
+
+Uno dei chiari vantaggi dell'uso dell'erediterietà è che un riferimento alla classe padre può riferire a istanze della classe figlia.
+Questa si dice conversione da sottotipo a supertipo.
+Si può effettuare anche la conversione opposta: questo chiaramente implica che la conversione sia valida (cioè la superclasse sia specializzata in una classe del tipo che cerchiamo).
+
+Per valutare la validità della conversione è presente l'operatore \lstinline|instanceof|, che restituisce \lstinline|true| quando si confronta un'istanza di classe col suo tipo.
+
+La regola generale è quindi che non conta il tipo del riferimento, ma il tipo dell'oggetto riferito.
+
+Nel caso di chiamate a metodi di oggetti riferiti, il tipo del riferimento determina solo l'\textit{insieme} dei metodi che possono essere invocati.
+L'implementazione effettiva del metodo viene definita dal tipo reale della classe, cioè chiamando metodi specializzati in classe figlie attraverso riferimenti a classi padri, si chiamano comunque i metodi specializzati e non quelli delle classe padri.
+
+\subsubsection{Riferimento \lstinline|super|}
+All'interno di classi figlie possiamo usare la parola chiave \lstinline|super| per riferirci alla classe padre.
+Questo può essere utile quando si ridefiniscono metodi e si vuole chiamare la versione del metodo nella classe padre (magari per poi aggiungere altra funzionalità).
+
+La parole chiave \lstinline|super| può essere usata anche per chiamare il costruttore della classe padre (\lstinline|super()|).
+In questo modo possiamo inizializzare la sezione di membri della classe padre quando si costruisce la classe figlia.
+
+Se la classe padre è dotata di soli costruttori con argomenti, chiamare questo costruttore è obbligatorio.
+
+\subsubsection{Classe \lstinline|Object|}
+Esiste una classe di sistema definita in \lstinline|java.lang|, chiamata \lstinline|Object|.
+Se una classe non indica esplicitamente di estenderne un altra, allora è implicitamente figlia della classe \lstinline|Object|.
+
+La gerarchia reale avrà quindi questo aspetto:
+\begin{center}
+	\begin{forest}
+		[Object, rectstyle	
+			[Animal
+				[Dog
+					[Bulldog]
+					[Chihuaha]
+					[Hound]
+				]
+				[Bear]
+				[Axolotl]
+			]
+		]
+	\end{forest}
+\end{center}
+
+\lstinline|Object| ha alcuni metodi, che possiamo dividere in 2 categorie:
+\begin{itemize}
+	\item Metodi per la sincronizzazione fra thread (\lstinline|wait()|, \lstinline|notify()|, \lstinline|notifyAll()|);
+	\item Metodi di utilità generale (\lstinline|equals()|, \lstinline|hashcode()|, \lstinline|toString()|)
+\end{itemize}
+
+\subsubsection{Metodo \lstinline|equals()|}
+Il metodo \lstinline|equals()| ha la firma:
+\begin{lstlisting}[language=java, style=codestyle]	
+public boolean equals(Object o)
+\end{lstlisting}
+cioè prende come argomento un oggetto è confronta l'oggetto implicito (quello su cui è chiamato) con tale oggetto.
+A questo punto, restituisce \lstinline|true| se i 2 oggetti risultano uguali, e \lstinline|false| altrimenti.
+
+Ogni classe può ridefinire il metodo \lstinline|equals()| secondo il proprio criterio.
+
+Per esempio, la classe \lstinline|String| ridefinisce il metodo in modo tale da verificare se due stringhe sono uguali (composte dagli stessi caratteri).
+
+L'implementazione di default della classe \lstinline|Object| equivale invece all'operatore \lstinline|==| (cioè per i riferimenti controlla se riferiscono lo stesso oggetto).
+
+\subsubsection{Metodo \lstinline|getClass()|}
+Il metodo \lstinline|getClass()| è definito per ogni oggetto \lstinline|Object| e ci dà il primo sguardo al meccanismo della \textbf{riflessività}.
+La riflessività è il modo con cui il Java ci permette di guardare al codice sorgente del programma che stiamo sviluppando.
+
+Il metodo \lstinline|getClass()| restituisce quindi un oggetto di tipo \lstinline|Class| (con la C maiuscola) che descrive la classe stessa dell'oggetto su cui è chiamata.
+
+Possiamo usare questo metodo per capire se due classi hanno lo stesso tipo, o se una classe ha un dato tipo confrontandolo con i cosiddetti \textit{letterali classe}, definiti come \lstinline|<classe-nota>.class|.
+
+\subsubsection{Metodo \lstinline|hashCode()|}
+Un'altro metodo definito per \lstinline|Object| è \lstinline|hashCode()|, che restituisce l'\lstinline|hashCode| dell'oggetto a cui viene applicato.
+Questo è un valore che deve essere diverso per ogni oggetto (solitamente associato a dove l'oggetto è allocato).
+
+Dobbiamo quindi impegnarci a ridefinirlo (nel caso ci torni utile) con campi che sono unici per ogni istanza di classe.
+
+\subsubsection{Metodo \lstinline|toString()|}
+Infine, vediamo il metodo \lstinline|toString()|. Questo serve semplicemente a convertire un oggetto in una stringa, e può essere ridefinito nella maniera che ha più senso (semanticamente) per il tipo di oggetto che stiamo implementando.
+
+\subsection{Polimorfismo}
+Il principio dell'ereditarietà, e principalmente il fatto che un riferimento
+di tipo superclasse può riferire ad oggetti ti tipo sottoclasse, ci permette di realizzare un'altro principio, quello del \textbf{polimorfismo}.
+
+Supponiamo infatti che una superclasse implementi un metodo, e che più sottoclassi eredi di tale classe ridefiniscano dato metodo.
+Ottenendo un riferimento dei tipo superclasse a un insieme di classi figlie, potremmo chiamare il metodo ridefinito (dal riferimento di tipo superclasse) sulle sottoclassi, ottenendo ogni volta il comportamento ridefinito dalla sottoclasse.
+
+\subsection{Classi astratte}
+Una classe astratta non può essere istanziata, ma può essere usata come classe base nella definizione di nuove classi.
+
+Le classi astratte sono quindi utili come modello per la definizione di classi: ci permettono di definire campi e metodi comuni a più classi figlie ma che di per sè non corrispondono a nessuna implementazione completa di classe.
+
+\end{document}
