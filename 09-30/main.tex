@@ -373,8 +373,9 @@ Supponiamo infatti che una superclasse implementi un metodo, e che più sottocla
 Ottenendo un riferimento dei tipo superclasse a un insieme di classi figlie, potremmo chiamare il metodo ridefinito (dal riferimento di tipo superclasse) sulle sottoclassi, ottenendo ogni volta il comportamento ridefinito dalla sottoclasse.
 
 \subsection{Classi astratte}
-Una classe astratta non può essere istanziata, ma può essere usata come classe base nella definizione di nuove classi.
+Una \textbf{classe astratta} non può essere istanziata, ma può essere usata come classe base nella definizione di nuove classi.
+Inoltre, ci è concesso creare riferimenti a classi astratte che possono riferire a ogni tipo specializzato dalla stessa. 
 
-Le classi astratte sono quindi utili come modello per la definizione di classi: ci permettono di definire campi e metodi comuni a più classi figlie ma che di per sè non corrispondono a nessuna implementazione completa di classe.
+Le classi astratte sono quindi utili come modello per la definizione di classi: ci permettono di definire campi e metodi (nel caso non si specifichi corpo, \textit{metodi astratti}) comuni a più classi figlie ma che di per sè non corrispondono a nessuna implementazione completa di classe.
 
 \end{document}
