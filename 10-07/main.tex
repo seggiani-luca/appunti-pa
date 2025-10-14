@@ -271,6 +271,77 @@ Abbiamo che gli \lstinline|enum| in Java sono effettivamente definiti come una c
 Sono per questo dotati di alcune funzioni di utilità, tra cui \lstinline|toString()| e \lstinline|name()| per ottenere i nomi dei campi dell'\lstinline|enum| a tempo di esecuzione (impossibile in linguaggi come il C++, a meno di non definire macchinose conversioni esplicite in stringhe).
 In particolare, la differenza fra \lstinline|toString()| e \lstinline|name()| è che \lstinline|name()| è \lstinline|final|, mentre \lstinline|toString()| è ridefinibile da ogni classe \lstinline|enum|.
 
+\subsection{Eccezioni}
+Il Java permette la gestione delle eccezioni secondo il meccanismo noto ad esempio dal C++.
+In particolare, la tassonomia delle classe di eccezione è la seguente:
+\begin{center}
+	\begin{forest}
+		[Object, rectstyle
+			[Throwable
+				[Error
+					[LinkageError]
+					[..., draw=none]
+					[VirtualMachineError]
+				]
+				[Exception
+					[RuntimeException [..., draw=none]]
+					[..., draw=none]
+				]
+			]
+		]	
+	\end{forest}
+\end{center}
 
+L'oggetto Throwable può essere \textit{lanciato}, cioè mandato al chiamante attraverso la parola chiave \lstinline|throw|.
+Questo definirà il classico blocco \lstinline|try { /* ... */} catch(Exception e) { /* gestore */ }| per implementare il gestore di eccezioni.
+
+Esistono eccezioni di tipo \textbf{checked} e \textbf{unchecked}:
+\begin{itemize}
+	\item \textbf{Checked}: fanno parte della \textit{firma} della funzione che le lancia, e bisogna quindi che queste lo dichiarino (con la parola chiave \lstinline|throws|) e il chiamante definisca un gestore (o a sua volta dichiari di poter inoltrare l'eccezione). Sono di questo tipo tutte le classi che estendono Exception tranne RuntimeException;
+	\item \textbf{Unhecked}: rappresentano errori di programmazione o comunque non rimediabili a tempo di esecuzione, e non è necessario gestirne un gestore (ci aspettiamo che sia il gestore di default a stampare informazioni ed arrestare il programma). Sono di questo tipo le specializzazioni di:
+		\begin{itemize}
+			\item \textbf{Error}: rappresentano errori interni alla JVM, o comunque specifici del linguaggio Java. Non ci aspettiamo che il progammatore possa gestirli, e quindi terminano il programma;
+			\item \textbf{RuntimeException}: rappresentano errori di programmazione irrecuperabili come accessi fuori buond ad array, ecc...
+		\end{itemize}
+\end{itemize}
+
+\subsubsection{Blocchi \lstinline|try|-\lstinline|catch|-\lstinline|finally|}
+Vediamo nello specifico come si trattano le chiamate a metodi che possono lanciare eccezioni, e il modo in cui si definiscono gestori di eccezioni.
+Un classico blocco \lstinline|try|-\lstinline|catch|-\lstinline|finally| in Java ha l'aspetto:
+\begin{lstlisting}[language=java, style=codestyle]	
+try {
+	// statement
+} catch(Exception1 e1) {
+	// gestisci Exception1
+} catch(Exception2 e2) {
+	// gestisci Exception2
+}
+// ...
+finally {
+	// blocco finally 
+}
+\end{lstlisting}
+
+Vediamone le componenti:
+\begin{itemize}
+	\item Il blocco \lstinline|try| contiene il codice che vogliamo eseguire, cioè probabilmente una chiamata a metodo che lancia Exception1 e Exception2;
+	\item Il blocco \lstinline|catch| cattura una certa eccezione (specificata negli argomenti, può catturare più eccezioni se si usa il separatore \lstinline|||). A questo punto dovrà definire codice che si occupa di gestire tale eccezione;
+	\item Il blocco \lstinline|finally| contiene codice che viene eseguito dopo che tutta l'elaborazione precedente, sia stata dalla \lstinline|try| o dalle \lstinline|catch|, è stata eseguita. Ha principalmente lo scopo di permetterci di fare pulizia se un'operazione su risorse (come un accesso a file) fallisce.
+\end{itemize}
+
+I blocchi \lstinline|catch| vengono valutati sequenzialmente quando viene lanciata un eccezione: è inutile definire un gestore di eccezione se in seguito se ne definisce uno per un suo sottotipo, in quanto il primo verrà sempre eseguito al posto del secondo quando possibile (e in questo caso è possibile sempre).
+
+\subsubsection{Clausola \lstinline|throws|}
+Abbiamo introdotto come la parola chiave \lstinline|throws| specifica per il \textit{contratto} della funzione che questa può lanciare una certa eccezione \textit{checked}: approfondiamo questo aspetto.
+Inserire le eccezioni lanciate costringe il programmatore che usa il metodo a capire cosa potrebbe succedere, e risolvere correttamente le situazioni critiche.
+Proprio per questo motivo, a dispetto del polimorfismo è opportuno che le eccezioni specificate siano il più specifiche possibile.
+
+I blocchi di inizializzazione statici non possono lanciare eccezioni \textit{checked} in quanto non possiedono clausola \lstinline|throws|: di contro i blocchi di inizializzazione non statici prendono direttamente la clausola \lstinline|throws| del costruttore di classi (e infatti ne sono considerati parte). 
+
+Nel caso dell'ereditarietà, abbiamo che:
+\begin{itemize}
+	\item Se si sovrascrive un metodo con clausola \lstinline|throws|, bisogna specificare una causola \lstinline|throws| del metoodo sovrascritto con la stessa eccezione o un suo sottotipo (a meno che il metodo sovrascritto non lanci eccezioni di qualsiasi tipo). Sostanzialmente, vogliamo assicurarci che chiunque vede soltanto il metodo base (ad esempio da un riferimento a superclasse) possa gestire l'eccezione;
+	\item Se un metodo esiste in più interfacce, e ha clausole \lstinline|throws| diverse in ognuna, dovrà implementarle tutte nella classe che implementa le interfacce.
+\end{itemize}
 
 \end{document}
