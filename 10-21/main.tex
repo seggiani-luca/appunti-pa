@@ -1,0 +1,303 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[a4paper, margin=8em]{geometry}
+
+% usa i pacchetti per la scrittura in italiano
+\usepackage[french,italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\frenchspacing 
+
+% usa i pacchetti per la formattazione matematica
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+
+% usa altri pacchetti
+\usepackage{gensymb}
+\usepackage{hyperref}
+\usepackage{standalone}
+
+\usepackage{colortbl}
+
+\usepackage{xstring}
+\usepackage{karnaugh-map}
+
+% imposta il titolo
+\title{Appunti Programmazione Avanzata}
+\author{Luca Seggiani}
+\date{2025}
+
+% imposta lo stile
+% usa helvetica
+\usepackage[scaled]{helvet}
+% usa palatino
+\usepackage{palatino}
+% usa un font monospazio guardabile
+\usepackage{lmodern}
+
+\renewcommand{\rmdefault}{ppl}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\ttdefault}{lmtt}
+
+% circuiti
+\usepackage{circuitikz}
+\usetikzlibrary{babel}
+
+% testo cerchiato
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+% disponi il titolo
+\makeatletter
+\renewcommand{\maketitle} {
+	\begin{center} 
+		\begin{minipage}[t]{.8\textwidth}
+			\textsf{\huge\bfseries \@title} 
+		\end{minipage}%
+		\begin{minipage}[t]{.2\textwidth}
+			\raggedleft \vspace{-1.65em}
+			\textsf{\small \@author} \vfill
+			\textsf{\small \@date}
+		\end{minipage}
+		\par
+	\end{center}
+
+	\thispagestyle{empty}
+	\pagestyle{fancy}
+}
+\makeatother
+
+% disponi teoremi
+\usepackage{tcolorbox}
+\newtcolorbox[auto counter, number within=section]{theorem}[2][]{%
+	colback=blue!10, 
+	colframe=blue!40!black, 
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries, 
+	title=Teorema~\thetcbcounter: #2, 
+	#1
+}
+
+% disponi definizioni
+\newtcolorbox[auto counter, number within=section]{definition}[2][]{%
+	colback=red!10,
+	colframe=red!40!black,
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries,
+	title=Definizione~\thetcbcounter: #2,
+	#1
+}
+
+% disponi codice
+\usepackage{listings}
+\usepackage[table]{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{codestyle}{
+		backgroundcolor=\color{black!5}, 
+		commentstyle=\color{codegreen},
+		keywordstyle=\bfseries\color{magenta},
+		numberstyle=\sffamily\tiny\color{black!60},
+		stringstyle=\color{green!50!black},
+		basicstyle=\ttfamily\footnotesize,
+		breakatwhitespace=false,         
+		breaklines=true,                 
+		captionpos=b,                    
+		keepspaces=true,                 
+		numbers=left,                    
+		numbersep=5pt,                  
+		showspaces=false,                
+		showstringspaces=false,
+		showtabs=false,                  
+		tabsize=2
+}
+
+\lstdefinestyle{shellstyle}{
+		backgroundcolor=\color{black!5}, 
+		basicstyle=\ttfamily\footnotesize\color{black}, 
+		commentstyle=\color{black}, 
+		keywordstyle=\color{black},
+		numberstyle=\color{black!5},
+		stringstyle=\color{black}, 
+		showspaces=false,
+		showstringspaces=false, 
+		showtabs=false, 
+		tabsize=2, 
+		numbers=none, 
+		breaklines=true
+}
+
+
+\lstdefinelanguage{assembler}{ 
+  keywords={AAA, AAD, AAM, AAS, ADC, ADCB, ADCW, ADCL, ADD, ADDB, ADDW, ADDL, AND, ANDB, ANDW, ANDL,
+        ARPL, BOUND, BSF, BSFL, BSFW, BSR, BSRL, BSRW, BSWAP, BT, BTC, BTCB, BTCW, BTCL, BTR, 
+        BTRB, BTRW, BTRL, BTS, BTSB, BTSW, BTSL, CALL, CBW, CDQ, CLC, CLD, CLI, CLTS, CMC, CMP,
+        CMPB, CMPW, CMPL, CMPS, CMPSB, CMPSD, CMPSW, CMPXCHG, CMPXCHGB, CMPXCHGW, CMPXCHGL,
+        CMPXCHG8B, CPUID, CWDE, DAA, DAS, DEC, DECB, DECW, DECL, DIV, DIVB, DIVW, DIVL, ENTER,
+        HLT, IDIV, IDIVB, IDIVW, IDIVL, IMUL, IMULB, IMULW, IMULL, IN, INB, INW, INL, INC, INCB,
+        INCW, INCL, INS, INSB, INSD, INSW, INT, INT3, INTO, INVD, INVLPG, IRET, IRETD, JA, JAE,
+        JB, JBE, JC, JCXZ, JE, JECXZ, JG, JGE, JL, JLE, JMP, JNA, JNAE, JNB, JNBE, JNC, JNE, JNG,
+        JNGE, JNL, JNLE, JNO, JNP, JNS, JNZ, JO, JP, JPE, JPO, JS, JZ, LAHF, LAR, LCALL, LDS,
+        LEA, LEAVE, LES, LFS, LGDT, LGS, LIDT, LMSW, LOCK, LODSB, LODSD, LODSW, LOOP, LOOPE,
+        LOOPNE, LSL, LSS, LTR, MOV, MOVB, MOVW, MOVL, MOVSB, MOVSD, MOVSW, MOVSX, MOVSXB,
+        MOVSXW, MOVSXL, MOVZX, MOVZXB, MOVZXW, MOVZXL, MUL, MULB, MULW, MULL, NEG, NEGB, NEGW,
+        NEGL, NOP, NOT, NOTB, NOTW, NOTL, OR, ORB, ORW, ORL, OUT, OUTB, OUTW, OUTL, OUTSB, OUTSD,
+        OUTSW, POP, POPL, POPW, POPB, POPA, POPAD, POPF, POPFD, PUSH, PUSHL, PUSHW, PUSHB, PUSHA, 
+				PUSHAD, PUSHF, PUSHFD, RCL, RCLB, RCLW, MOVSL, MOVSB, MOVSW, STOSL, STOSB, STOSW, LODSB, LODSW,
+				LODSL, INSB, INSW, INSL, OUTSB, OUTSL, OUTSW
+        RCLL, RCR, RCRB, RCRW, RCRL, RDMSR, RDPMC, RDTSC, REP, REPE, REPNE, RET, ROL, ROLB, ROLW,
+        ROLL, ROR, RORB, RORW, RORL, SAHF, SAL, SALB, SALW, SALL, SAR, SARB, SARW, SARL, SBB,
+        SBBB, SBBW, SBBL, SCASB, SCASD, SCASW, SETA, SETAE, SETB, SETBE, SETC, SETE, SETG, SETGE,
+        SETL, SETLE, SETNA, SETNAE, SETNB, SETNBE, SETNC, SETNE, SETNG, SETNGE, SETNL, SETNLE,
+        SETNO, SETNP, SETNS, SETNZ, SETO, SETP, SETPE, SETPO, SETS, SETZ, SGDT, SHL, SHLB, SHLW,
+        SHLL, SHLD, SHR, SHRB, SHRW, SHRL, SHRD, SIDT, SLDT, SMSW, STC, STD, STI, STOSB, STOSD,
+        STOSW, STR, SUB, SUBB, SUBW, SUBL, TEST, TESTB, TESTW, TESTL, VERR, VERW, WAIT, WBINVD,
+        XADD, XADDB, XADDW, XADDL, XCHG, XCHGB, XCHGW, XCHGL, XLAT, XLATB, XOR, XORB, XORW, XORL},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{\#},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{language=java, style=codestyle}
+
+% disponi sezioni
+\usepackage{titlesec}
+
+\titleformat{\section}
+	{\sffamily\Large\bfseries} 
+	{\thesection}{1em}{} 
+\titleformat{\subsection}
+	{\sffamily\large\bfseries}   
+	{\thesubsection}{1em}{} 
+\titleformat{\subsubsection}
+	{\sffamily\normalsize\bfseries} 
+	{\thesubsubsection}{1em}{}
+
+% tikz
+\usepackage{tikz}
+
+% float
+\usepackage{float}
+
+% grafici
+\usepackage{pgfplots}
+\pgfplotsset{width=10cm,compat=1.9}
+
+% disponi alberi
+\usepackage{forest}
+
+\forestset{
+	rectstyle/.style={
+		for tree={rectangle,draw,font=\large\sffamily}
+	},
+	roundstyle/.style={
+		for tree={circle,draw,font=\large}
+	}
+}
+
+% disponi algoritmi
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\makeatletter
+\renewcommand{\ALG@name}{Algoritmo}
+\makeatother
+
+% disponi numeri di pagina
+\usepackage{fancyhdr}
+\fancyhf{} 
+\fancyfoot[L]{\sffamily{\thepage}}
+
+\makeatletter
+\fancyhead[L]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@title \ \@date}}} 
+\fancyhead[R]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@author}}}
+\makeatother
+
+\begin{document}
+% sezione (data)
+\section{Lezione del 21-10-25}
+
+% stili pagina
+\thispagestyle{empty}
+\pagestyle{fancy}
+
+% testo
+Continuiamo a parlare della sincronizzazione, approfondendo il funzionamento dei metodi relativi.
+
+\subsubsection{Metodo \lstinline|wait()|}
+Il metodo \lstinline|wait()| è definito come \lstinline|public final void wait() throws InterruptedException|.
+Il thread che invoca \lstinline|wait()|:
+\begin{itemize}
+	\item Sospende la propria esecuzione;
+	\item Rilascia il lock sull'oggetto;
+	\item Riacquisisce automaticamente il lock quando esece dalla wait.Sospende la propria esecuzione;
+	\item Rilascia il lock sull'oggetto;
+	\item Riacquisisce automaticamente il lock quando esece dalla wait.
+\end{itemize}
+
+Esiste una versione con timeout di \lstinline|wait()|.
+Questa è definita come \lstinline|public final void wait(long timeout) throws InterruptedException|.
+In questo caso il thread che invoca \lstinline|wait()|:
+\begin{itemize}
+	\item Sospende la propria esecuzione;
+	\item Rilascia il lock sull'oggetto;
+	\item Aspetta i millisecondi di timeout: se li supera esce forzatamente riacquisendo i lock;
+	\item Riacquisisce automaticamente il lock quando esece dalla wait.Sospende la propria esecuzione;
+	\item Rilascia il lock sull'oggetto;
+	\item Riacquisisce automaticamente il lock quando esece dalla wait.
+\end{itemize}
+
+La \lstinline|wait(timeout)| con \lstinline|timeout| $= 0$ corrisponde alla \lstinline|wait()| (timeout infinito).
+
+\subsubsection{Metodo \lstinline|notify()|}
+Il metodo \lstinline|notify()| ha firma \lstinline|public final void notify()|. Quando viene invocato su un oggetto il primo fra i thread che erano in attesa su tale oggetto (cioè erano nella sua \textit{wait list}, dove si entra invocando \lstinline|wait()|) viene svegliato.
+
+Il \lstinline|notifyAll()| è una variante di \lstinline|notify()|, con firma \lstinline|public final void notifyAll()|, che sveglia tutti i thread in attesa nella \textit{wait list}.
+
+\par\medskip
+
+Notiamo che \lstinline|wait()|, \lstinline|notify()| e \lstinline|notifyAll()| non devono essere per forza chiamati sulla classe madre, ma possono anche essere chiamati su altri oggetti, con la prerogativa che si possieda un lock su tali oggetti.
+
+\subsection{Produttori e consumatori}
+Vediamo come applicare questo schema ha uno degli esempi più noti della programmazione concorrente: quello del paradigma dei \textbf{produttori} e  \textbf{consumatori}.
+
+Ipotizziamo una situazione dove esistono $n$ thread, $P_0$, $P_1$, ..., $P_n$ detti \textit{produttori}, ed $m$ thread, $C_0$, $C_1$, ..., $C_m$ detti \textit{consumatori}.
+Fra produttori e consumatori c'è un certo \textit{buffer}. Il buffer è \textit{condiviso} tra tutti i produttori e i consumatori, ed è in grado di contenere un numero limitato di valori.
+
+Ogni produttore ciclicamente:
+\begin{itemize}
+	\item Produce un nuovo valore;
+	\item Lo immette nel buffer.
+\end{itemize}
+Chiaramente, se il buffer è pieno, il produttore deve bloccarsi.
+
+Ogni consumatore ciclicamente:
+\begin{itemize}
+	\item Preleva un valore dal buffer;
+	\item Lo consuma.
+\end{itemize}
+Come sopra, se il buffer è vuoto, il consumatore deve bloccarsi.
+
+# scrivi codice e riporta
+
+\subsection{Differenza fra \lstinline|notify()| e \lstinline|notifyAll()|}
+Approfondiamo la differenza fra i metodi per il risveglio di thread, cioè \lstinline|notify()| e \lstinline|notifyAll()|.
+
+Su un oggetto possono essere in attesa più thread (alternativamente, in una \textit{wait list} possono esserci più di un thread).
+
+Se questi thread sono in attesa di condizioni diverse, è opportuno usare la \lstinline|notifyAll()|.
+In tal situazione, se si facesse diversamente (usando una semplice \lstinline|notify()|) si potrebbe infatti avere la sveglia di un solo thread che però non vede le proprie condizioni soddisfatte: nessuno viene effettivamente svegliato, si può incorrere in deadlock.
+
+Se tutti i thread bloccati attendono la stessa condizione, o se solo uno (senza specificare quale) dei thread bloccati può trarre beneficio dalla situazione creatasi, conviene invece usare \lstinline|notify()|.
+
+Nell'esempio sopra, sul buffer si usa \lstinline|notifyAll()| anziché \lstinline|notify()| in quanto produttori e consumatori possono entrambi bloccarsi sui thread, ma aspettando condizioni diverse.
+
+\end{document}
