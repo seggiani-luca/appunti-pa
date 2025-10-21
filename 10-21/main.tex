@@ -286,7 +286,8 @@ Ogni consumatore ciclicamente:
 \end{itemize}
 Come sopra, se il buffer è vuoto, il consumatore deve bloccarsi.
 
-# scrivi codice e riporta
+Vediamo quindi l'implementazione di questo pattern:
+\lstinputlisting{../java/prod_cons/main.java}
 
 \subsection{Differenza fra \lstinline|notify()| e \lstinline|notifyAll()|}
 Approfondiamo la differenza fra i metodi per il risveglio di thread, cioè \lstinline|notify()| e \lstinline|notifyAll()|.
