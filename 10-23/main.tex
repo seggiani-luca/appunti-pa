@@ -236,12 +236,12 @@ Vediamo un altro pattern tipico della programmazione concorrente la \textbf{gest
 Assumiamo di avere un insieme finito di \textbf{risorse}, gestite da un certo \textbf{gestore}. 
 Il gestore ha il compito di offrire due metodi:
 \begin{itemize}
-	\item \lstinline|int richiesta()|: restiuisce l'indice della risorsa che viene attribuita al chiamante;
-	\item \lstinline|void rilascia()|: rilascia la risorsa assegnata al chiamante.
+	\item \lstinline|int richiesta()|: restiuisce l'indice della risorsa che viene attribuita al chiamante. Può venire bloccata se non ci sono risorse rimanenti;
+	\item \lstinline|void rilascia(int k)|: rilascia la risorsa $k$-esima (che dovrebbe essere quella assegnata al chiamante).
 \end{itemize}
 
 Potremmo implementare tale sistema come segue:
-\lstinputlisting{../java/ris_eq/main.java} # finisci
+\lstinputlisting{../java/ris_eq/main.java}
 
 \subsection{Metodo \lstinline|join()|}
 Il metodo \lstinline|join()| viene offerto dalla classe \textit{Thread}, e serve ad aspettare che un altro thread finisca.
@@ -258,7 +258,5 @@ Esistono 3 versioni del \lstinline|join()|:
 	\item \lstinline|public final void join(long millis) throws InterruptedException|: come sopra, ma prevede un timeout di \lstinline|millis| millisecondi; 
 	\item \lstinline|public final void join(long millis, int nanos) throws InterruptedException|: di nuovo come sopra, ma prevede un timeout di \lstinline|millis| millisecondi e \lstinline|nanos| nanosecondi; 
 \end{itemize}
-
-
 
 \end{document}

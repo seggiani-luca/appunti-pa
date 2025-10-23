@@ -99,7 +99,7 @@ class Consumer extends Thread {
 }
 
 class Main {
-	static void main() {
+	public static void main(String[] args) {
 		// crea buffer
 		Buffer buf = new Buffer(10);
 

@@ -3,6 +3,7 @@
 *.exe
 *.out
 *.o
+*.class
 
 #ignora file multimediali
 *.mp3
