@@ -237,7 +237,7 @@ Questo meccanismo è stato deprecato quasi subito, in quanto pone seri rischi (a
 Quello che si consiglia di fare è quindi semplicemente prevedere variabili \lstinline|boolean running| nei thread, aggiornate da fuori ai thread, che la \lstinline|run()| dei thread controlla periodicamente per arrestarsi in maniera autonoma e pulita.
 
 \subsubsection{Interruzioni thread}
-Si possono mandare \texttbf{interrupt} sui thread, usando il meotodo \lstinline|interrupt()|.
+Si possono mandare \textbf{interrupt} sui thread, usando il meotodo \lstinline|interrupt()|.
 Quando si invia un interrupt, può accadere una di 2 cose:
 \begin{enumerate}
 	\item Se il thread è bloccato con una \lstinline|sleep()|, una \lstinline|wait()| o una \lstinline|join()|, il thread esce e entra nei rispettivi blocchi \lstinline|catch| con l'\textit{InterruptedException}. In questo caso l'\textit{interrupt status} non viene controllato;
