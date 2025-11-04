@@ -1,0 +1,494 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[a4paper, margin=8em]{geometry}
+
+% usa i pacchetti per la scrittura in italiano
+\usepackage[french,italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\frenchspacing 
+
+% usa i pacchetti per la formattazione matematica
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+
+% usa altri pacchetti
+\usepackage{gensymb}
+\usepackage{hyperref}
+\usepackage{standalone}
+
+\usepackage{colortbl}
+
+\usepackage{xstring}
+\usepackage{karnaugh-map}
+
+% imposta il titolo
+\title{Appunti Programmazione Avanzata}
+\author{Luca Seggiani}
+\date{2025}
+
+% imposta lo stile
+% usa helvetica
+\usepackage[scaled]{helvet}
+% usa palatino
+\usepackage{palatino}
+% usa un font monospazio guardabile
+\usepackage{lmodern}
+
+\renewcommand{\rmdefault}{ppl}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\ttdefault}{lmtt}
+
+% circuiti
+\usepackage{circuitikz}
+\usetikzlibrary{babel}
+
+% testo cerchiato
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+% disponi il titolo
+\makeatletter
+\renewcommand{\maketitle} {
+	\begin{center} 
+		\begin{minipage}[t]{.8\textwidth}
+			\textsf{\huge\bfseries \@title} 
+		\end{minipage}%
+		\begin{minipage}[t]{.2\textwidth}
+			\raggedleft \vspace{-1.65em}
+			\textsf{\small \@author} \vfill
+			\textsf{\small \@date}
+		\end{minipage}
+		\par
+	\end{center}
+
+	\thispagestyle{empty}
+	\pagestyle{fancy}
+}
+\makeatother
+
+% disponi teoremi
+\usepackage{tcolorbox}
+\newtcolorbox[auto counter, number within=section]{theorem}[2][]{%
+	colback=blue!10, 
+	colframe=blue!40!black, 
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries, 
+	title=Teorema~\thetcbcounter: #2, 
+	#1
+}
+
+% disponi definizioni
+\newtcolorbox[auto counter, number within=section]{definition}[2][]{%
+	colback=red!10,
+	colframe=red!40!black,
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries,
+	title=Definizione~\thetcbcounter: #2,
+	#1
+}
+
+% disponi codice
+\usepackage{listings}
+\usepackage[table]{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{codestyle}{
+		backgroundcolor=\color{black!5}, 
+		commentstyle=\color{codegreen},
+		keywordstyle=\bfseries\color{magenta},
+		numberstyle=\sffamily\tiny\color{black!60},
+		stringstyle=\color{green!50!black},
+		basicstyle=\ttfamily\footnotesize,
+		breakatwhitespace=false,         
+		breaklines=true,                 
+		captionpos=b,                    
+		keepspaces=true,                 
+		numbers=left,                    
+		numbersep=5pt,                  
+		showspaces=false,                
+		showstringspaces=false,
+		showtabs=false,                  
+		tabsize=2
+}
+
+\lstdefinestyle{shellstyle}{
+		backgroundcolor=\color{black!5}, 
+		basicstyle=\ttfamily\footnotesize\color{black}, 
+		commentstyle=\color{black}, 
+		keywordstyle=\color{black},
+		numberstyle=\color{black!5},
+		stringstyle=\color{black}, 
+		showspaces=false,
+		showstringspaces=false, 
+		showtabs=false, 
+		tabsize=2, 
+		numbers=none, 
+		breaklines=true
+}
+
+
+\lstdefinelanguage{assembler}{ 
+  keywords={AAA, AAD, AAM, AAS, ADC, ADCB, ADCW, ADCL, ADD, ADDB, ADDW, ADDL, AND, ANDB, ANDW, ANDL,
+        ARPL, BOUND, BSF, BSFL, BSFW, BSR, BSRL, BSRW, BSWAP, BT, BTC, BTCB, BTCW, BTCL, BTR, 
+        BTRB, BTRW, BTRL, BTS, BTSB, BTSW, BTSL, CALL, CBW, CDQ, CLC, CLD, CLI, CLTS, CMC, CMP,
+        CMPB, CMPW, CMPL, CMPS, CMPSB, CMPSD, CMPSW, CMPXCHG, CMPXCHGB, CMPXCHGW, CMPXCHGL,
+        CMPXCHG8B, CPUID, CWDE, DAA, DAS, DEC, DECB, DECW, DECL, DIV, DIVB, DIVW, DIVL, ENTER,
+        HLT, IDIV, IDIVB, IDIVW, IDIVL, IMUL, IMULB, IMULW, IMULL, IN, INB, INW, INL, INC, INCB,
+        INCW, INCL, INS, INSB, INSD, INSW, INT, INT3, INTO, INVD, INVLPG, IRET, IRETD, JA, JAE,
+        JB, JBE, JC, JCXZ, JE, JECXZ, JG, JGE, JL, JLE, JMP, JNA, JNAE, JNB, JNBE, JNC, JNE, JNG,
+        JNGE, JNL, JNLE, JNO, JNP, JNS, JNZ, JO, JP, JPE, JPO, JS, JZ, LAHF, LAR, LCALL, LDS,
+        LEA, LEAVE, LES, LFS, LGDT, LGS, LIDT, LMSW, LOCK, LODSB, LODSD, LODSW, LOOP, LOOPE,
+        LOOPNE, LSL, LSS, LTR, MOV, MOVB, MOVW, MOVL, MOVSB, MOVSD, MOVSW, MOVSX, MOVSXB,
+        MOVSXW, MOVSXL, MOVZX, MOVZXB, MOVZXW, MOVZXL, MUL, MULB, MULW, MULL, NEG, NEGB, NEGW,
+        NEGL, NOP, NOT, NOTB, NOTW, NOTL, OR, ORB, ORW, ORL, OUT, OUTB, OUTW, OUTL, OUTSB, OUTSD,
+        OUTSW, POP, POPL, POPW, POPB, POPA, POPAD, POPF, POPFD, PUSH, PUSHL, PUSHW, PUSHB, PUSHA, 
+				PUSHAD, PUSHF, PUSHFD, RCL, RCLB, RCLW, MOVSL, MOVSB, MOVSW, STOSL, STOSB, STOSW, LODSB, LODSW,
+				LODSL, INSB, INSW, INSL, OUTSB, OUTSL, OUTSW
+        RCLL, RCR, RCRB, RCRW, RCRL, RDMSR, RDPMC, RDTSC, REP, REPE, REPNE, RET, ROL, ROLB, ROLW,
+        ROLL, ROR, RORB, RORW, RORL, SAHF, SAL, SALB, SALW, SALL, SAR, SARB, SARW, SARL, SBB,
+        SBBB, SBBW, SBBL, SCASB, SCASD, SCASW, SETA, SETAE, SETB, SETBE, SETC, SETE, SETG, SETGE,
+        SETL, SETLE, SETNA, SETNAE, SETNB, SETNBE, SETNC, SETNE, SETNG, SETNGE, SETNL, SETNLE,
+        SETNO, SETNP, SETNS, SETNZ, SETO, SETP, SETPE, SETPO, SETS, SETZ, SGDT, SHL, SHLB, SHLW,
+        SHLL, SHLD, SHR, SHRB, SHRW, SHRL, SHRD, SIDT, SLDT, SMSW, STC, STD, STI, STOSB, STOSD,
+        STOSW, STR, SUB, SUBB, SUBW, SUBL, TEST, TESTB, TESTW, TESTL, VERR, VERW, WAIT, WBINVD,
+        XADD, XADDB, XADDW, XADDL, XCHG, XCHGB, XCHGW, XCHGL, XLAT, XLATB, XOR, XORB, XORW, XORL},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{\#},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{language=java, style=codestyle}
+
+% disponi sezioni
+\usepackage{titlesec}
+
+\titleformat{\section}
+	{\sffamily\Large\bfseries} 
+	{\thesection}{1em}{} 
+\titleformat{\subsection}
+	{\sffamily\large\bfseries}   
+	{\thesubsection}{1em}{} 
+\titleformat{\subsubsection}
+	{\sffamily\normalsize\bfseries} 
+	{\thesubsubsection}{1em}{}
+
+% tikz
+\usepackage{tikz}
+
+% float
+\usepackage{float}
+
+% grafici
+\usepackage{pgfplots}
+\pgfplotsset{width=10cm,compat=1.9}
+
+% disponi alberi
+\usepackage{forest}
+
+\forestset{
+	rectstyle/.style={
+		for tree={rectangle,draw,font=\large\sffamily}
+	},
+	roundstyle/.style={
+		for tree={circle,draw,font=\large}
+	}
+}
+
+% disponi algoritmi
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\makeatletter
+\renewcommand{\ALG@name}{Algoritmo}
+\makeatother
+
+% disponi numeri di pagina
+\usepackage{fancyhdr}
+\fancyhf{} 
+\fancyfoot[L]{\sffamily{\thepage}}
+
+\makeatletter
+\fancyhead[L]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@title \ \@date}}} 
+\fancyhead[R]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@author}}}
+\makeatother
+
+\begin{document}
+% sezione (data)
+\section{Lezione del 04-11-25}
+
+% stili pagina
+\thispagestyle{empty}
+\pagestyle{fancy}
+
+% testo
+\subsection{Java moderno}
+Vediamo quindi alcune funzionalità introdotte e in uso nelle versioni più recenti di Java.
+
+Non notiamo alcuni dettagli più piccoli, come gli switch che supportano stringhe e le condizioni multiple nei blocchi \lstinline|try| (usando l'operatore \lstinline|||).
+
+\subsubsection{Annotazioni}
+Le \textbf{annotazioni} sono uno strumento introdotto in Java 5 che si affianca ai commenti.
+La differenza fra commenti e annotazioni è che le annotazioni sono strutturate.
+
+Esistono alcune annotazioni predefinite:
+\begin{itemize}
+	\item \textit{@Deprecated}, significa che un metodo è deprecato e quindi bisognerebbe cercare di non usarlo;
+	\item \textit{@Override}, significa che un metodo ridefinisce uno della superclasse;
+	\item \textit{@SuppressWarnings}, sopprime avvisi dal compilatore.
+\end{itemize}
+
+Le annotazioni possono essere definite dal programmatore, sfruttando una sintassi simile alla dichiarazione di interfacca (ma usando la chiocciola) ad esempio:
+\begin{lstlisting}[language=java, style=codestyle]	
+import java.lang.annotation.*;
+[...]
+
+// visibile a runtime (attraverso reflection)
+@Retention(RetentionPolicy.RUNTIME)
+// applicabile a metodi
+@Target(ElementType.METHOD)
+public @Interface Info {
+	String info1();
+	String info2();
+}
+\end{lstlisting}
+
+Vediamo come si prevedono due annotazioni preliminari alla definizione di annotazione:
+\begin{itemize}
+	\item \textit{@Retention}, indica dove l'annotazione è visibile fra \textit{SOURCE} (solo nel sorgente, scartata dal compilatore), \textit{CLASS} (presente nel bytecode ma non visibile a runtime), \textit{RUNTIME} (accessibile tramite reflection). Nell'esempio è \lstinline|RUNTIME|;
+	\item \textit{@Target}, indica l'obiettivo dell'annotazione (metodi, classi, ecc...). Nell'esempio è \textit{METHOD} (metodo).
+\end{itemize}
+
+Si può quindi usare l'annotazione dichiarata come segue: 
+\begin{lstlisting}[language=java, style=codestyle]	
+class MiaClasse {
+	@Info(info1 = "qualcosa", info2 = "qualcos'altro")
+	public void foo() {
+		// ...
+	}
+}
+\end{lstlisting}
+
+A questo punto si può, attraverso reflection, accedere all'annotazione di \lstinline|foo()|:
+\begin{lstlisting}[language=java, style=codestyle]	
+import java.lang.reflect.*;
+[...]
+
+Method method = MiaClasse.class.getMethod("foo");
+if (method.isAnnotationPresent(Info.class)) {
+		Info annotation = method.getAnnotation(Info.class);
+		
+		// stampa i campi dell'annotazione
+		System.out.println(annotation.info1());
+		System.out.println(annotation.info2());
+}
+\end{lstlisting}
+
+\subsubsection{Reflection}
+La \textbf{reflection} (\textit{riflessione}) è il meccanismo che permette ai programmi Java di ispezionare altri programmi Java (incluso il programma stesso).
+
+Questo avviene attraverso classi disponibili in \lstinline|java.lang.reflect|:
+\begin{itemize}
+	\item \textbf{Class}: è una classe le cui istanze rappresentano altre classi;
+	\item \textbf{Method}: è una classe le cui istanze rappresentano metodi di altre classi;
+	\item \textbf{Field}: è una classe le cui istanze rappresentano campi di altre classi.
+\end{itemize}
+
+Esistono poi altre classi che rappresentano costruttori, ecc...
+
+Abbiamo già visto un esempio di reflection nella scorsa sezione riguardante le annotazioni.
+Vediamone un'altro:
+\begin{lstlisting}[language=java, style=codestyle]	
+import java.lang.reflect.*;
+[...]
+
+Object cane = new Cane();
+Class<?> clazz = cane.getClasse();
+
+// da qui possiamo accedere alla struttura della classe Cane, e.g.:
+Field[] fields = clazz.getDeclaredFields();
+List<String> actualFields = getFieldNames(fields);
+System.out.println(actualFields.get(0)); // magari "nome"
+\end{lstlisting}
+
+\subsubsection{Import statici}
+Java permette, sempre dalla versione 5, di fare i cosiddetti \textbf{import statici}, cioè importare tutti i metodi e campi statici di una classe.
+Questo si fa semplicemente aggiungendo la parola chiave \lstinline|static| a le direttive \lstinline|import|. 
+Una volta fatto lo static import da una classe, si possono usare gli identificatori statici di quella classe senza prefiggere il nome della classe.
+
+\subsubsection{Classi innestate}
+Approfondiamo il discorso delle classi innestate.
+
+\par\smallskip
+
+Le classi statiche possono essere innestate all'interno di altre classi.
+In questo caso:
+\begin{itemize}
+	\item Possono accedere a tutti i campi statici della classe esterna, anche privati;
+	\item Possono accedere a tutti i campi della classe esterna, anche privati, se ne hanno un riferimento.
+\end{itemize}
+
+Le interfacce e gli enum annidati a classi sono implicitamente static.
+
+\par\smallskip
+
+Le classi innestate non statiche sono dette \textit{classi interne}.
+\begin{itemize}
+	\item Ogni istanza di classe interna è associata ad una classe esterna, ed ha accesso ai riferimenti \lstinline|this| e \lstinline|Esterna.this| (cioè accesso alla classe esterna qualificando il \lstinline|this| con il nome della classe esterna);
+	\item Le classi interne non possono avere membri statici;
+	\item Possono invece accedere ai campi privati della classe esterna: se non ci sono ambiguità, infatti, il riferimento this sia a sé stesse che alla classe esterna può essere omesso.
+\end{itemize}
+
+\subsubsection{Argomenti variabili}
+Java permette di avere metodi con numero di argomenti variabile (\textit{varargs}) usando la solita sintassi coi tre puntini.
+Gli argomenti risultano quindi accessibili come vettori.
+Ad esempio, si può avere:
+
+\begin{lstlisting}[language=java, style=codestyle]	
+void metodo(String...a) {
+	for(String x : a) {
+		// stampa tutti gli argomenti forniti
+		System.out.println(x);
+	}
+}
+
+[...]
+
+// entrambi validi
+metodo("Ciao");
+metodo("Ciao", "mondo");
+// ecc...
+\end{lstlisting}
+
+\subsubsection{Try-with-resources}
+Una soluzione introdotta in Java 7 è quella delle \textbf{try-with-resources}, usata quando bisogna accedere a risorse, gestire delle eccezioni e quindi liberare tali risorse in presenza di eccezioni.
+
+La sintassi storica per questo tipo di operazione era la seguente:
+\begin{lstlisting}[language=java, style=codestyle]	
+void read(String n) throws IOException {
+	FileReader f = new FileReader(n);
+	BufferedReader b = new BufferedReader(f);
+	try {
+		System.out.println(b.readLine());
+	} finally {
+		b.close();
+		f.close();
+	}
+}
+\end{lstlisting}
+
+Notando che andiamo subito al blocco \lstinline|finally|, in quanto per qualsiasi eccezione vogliamo comunque fare le stesse cose: chiudere \lstinline|b| ed \lstinline|f| (nell'ordine inverso a quello in cui vengono creati).
+Questo approccio può però portare a leak di risorse: poniamo ad esempio che la \lstinline|b.close()| generi a sua volta un'eccezione: in questo caso la \lstinline|f.close()| non viene mai eseguita ed il file non viene liberata.
+
+Da Java 7 si può risolvere questo problema come segue
+\begin{lstlisting}[language=java, style=codestyle]	
+void read(String n) throws IOException {
+	try(FileReader f = new FileReader(n); BufferedReader b = new BufferedReader(f)) {
+		System.out.println(b.readLine());
+	}
+	// qui f e b sono stati chiusi!
+}
+\end{lstlisting}
+
+In questo caso il meccanismo delle try-with-resources ci assicura che le risorse verrano chiuse automaticamente, e in ogni caso, nell'ordine inverso a quello in cui vengono acquisite (cioè dichiarate nella condizione del \lstinline|tr|). 
+
+\subsection{Tipi generici}
+I \textbf{tipi generici} sono simili ai template del C++.
+Usare i tipi raw (come ad esempio \textit{Object}) può portare a problemi non rilevati in fase di compilazione come ad esempio conversioni invalide, ecc...
+Ad esempio, potremmo avere:
+\begin{lstlisting}[language=java, style=codestyle]	
+public class Casella {
+	private Object o;
+
+	public Casella(Object o) {
+		this.o = o;
+	}
+
+	public Object prendi() {
+		return o;
+	}
+
+	public void copia(Casella c) {
+		this.o = c.o;
+	}	
+}
+
+[...]
+
+Casella c1 = new Casella("ABC");
+Casella c2 = new Casella(Integer.valueOf(123));
+c1.copia(c2);
+String s = (String) c1.prendi(); // errore! int non puo' essere convertito in stringa
+\end{lstlisting}
+
+La soluzione è rappresentata dai tipi generici.
+Un tipo generico è una classe o un'interfaccia parametrizzata in termini di tipi.
+Ad esempio, si può avere:
+\begin{lstlisting}[language=java, style=codestyle]	
+public class Casella<T> {
+	private T t;
+
+	public Casella(T t) {
+		this.t = t;
+	}
+
+	public Object prendi() {
+		return t;
+	}
+
+	public void copia(Casella<T> c) {
+		this.t = c.t;
+	}
+}
+\end{lstlisting}
+
+In questo caso, attraverso la notazione \lstinline|<>|, si riesce a discriminare fra classi \textit{Casella} sulla base del tipo di dati che trasportano.
+Si avrà quindi rilevamento di errori come quello riportato prima, ma a tempo di compilazione:
+\begin{lstlisting}[language=java, style=codestyle]	
+Casella c1 = new Casella("ABC");
+Casella c2 = new Casella(Integer.valueOf(123));
+c1.copia(c2); // errore! Casella<Integer> non puo' essere convertito in Casella<String>
+\end{lstlisting}
+
+Per i tipi generici si può usare la wildcard \lstinline|<?>|, già vista in 10.1.2 quando stavamo parlando della riflessione.
+Un riferimento con tipi generici wildcard non può essere istanziato, ma può essere usato per riferire a classi con tipi generici reali.
+
+Ad esempio:
+\begin{lstlisting}[language=java, style=codestyle]	
+w = Casella<?>;
+
+cs = new Casella<>("ABC");
+ci = new Casella<>(Integer.valueOf(123));
+
+w = ci;
+w = cs; // permesso
+
+String s = (String) c1.prendi();
+\end{lstlisting}
+
+Questo chiaramente ci riporta alla situazione con cui abbiamo aperto la sezione: questo non ci turba, in quanto con gli wildcard dobbiamo esplicitamente specificare che vogliamo riferirci a classi con tipi generici diversi fra di loro (quindi ci portiamo in una situazione dove siamo soggetti ad errori).
+
+Notiamo poi che le wildcard possono essere anche più specifiche: in particolare, si possono usare wildcard con classi base per riferirsi a tipi generici classi specializzate.
+
+\subsubsection{Metodi default}
+I \textbf{metodi di default} servono a coprire un buco lasciato dalle interfacce.
+Quando si definisce un metodo all'interno di un'interfaccia, infatti, server che ogni classe che implementa tale interfaccia implementi la sua versione di tale metodo.
+Un metodo dichiarato come \lstinline|default| all'interno di un'interfaccia, invece, permette di specificare un'implementazione predefinita, che viene quindi usata da tutte le interfacce (può eventualmente essere ridefinita).
+
+Il problema è chiaramente la sovrapposizione che si ha data dalla definizione e implementazione in più interfacce (o anche solo in una classe base e quindi in interfacce) di una classe.
+In questo caso si deve usare il nome completamente qualificato del metodo (cioè riferirsi esattamente alla classe o all'interfaccia la cui versione del metodo vogliamo).
+
+\par\smallskip
+
+Notiamo a questo punto che si possono definire anche metodi statici all'interno di interfacce (senza doverli specificare come \lstinline|default|).
+Questi sono metodi implementati direttamente nelle interfacce (tipicamente di utilità), legati all'interfaccia e non disponibili a classi che non implementano tale interfaccia.
+
+\end{document}
