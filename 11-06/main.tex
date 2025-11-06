@@ -1,0 +1,525 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[a4paper, margin=8em]{geometry}
+
+% usa i pacchetti per la scrittura in italiano
+\usepackage[french,italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\frenchspacing 
+
+% usa i pacchetti per la formattazione matematica
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+
+% usa altri pacchetti
+\usepackage{gensymb}
+\usepackage{hyperref}
+\usepackage{standalone}
+
+\usepackage{colortbl}
+
+\usepackage{xstring}
+\usepackage{karnaugh-map}
+
+% imposta il titolo
+\title{Appunti Programmazione Avanzata}
+\author{Luca Seggiani}
+\date{2025}
+
+% imposta lo stile
+% usa helvetica
+\usepackage[scaled]{helvet}
+% usa palatino
+\usepackage{palatino}
+% usa un font monospazio guardabile
+\usepackage{lmodern}
+
+\renewcommand{\rmdefault}{ppl}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\ttdefault}{lmtt}
+
+% circuiti
+\usepackage{circuitikz}
+\usetikzlibrary{babel}
+
+% testo cerchiato
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+% disponi il titolo
+\makeatletter
+\renewcommand{\maketitle} {
+	\begin{center} 
+		\begin{minipage}[t]{.8\textwidth}
+			\textsf{\huge\bfseries \@title} 
+		\end{minipage}%
+		\begin{minipage}[t]{.2\textwidth}
+			\raggedleft \vspace{-1.65em}
+			\textsf{\small \@author} \vfill
+			\textsf{\small \@date}
+		\end{minipage}
+		\par
+	\end{center}
+
+	\thispagestyle{empty}
+	\pagestyle{fancy}
+}
+\makeatother
+
+% disponi teoremi
+\usepackage{tcolorbox}
+\newtcolorbox[auto counter, number within=section]{theorem}[2][]{%
+	colback=blue!10, 
+	colframe=blue!40!black, 
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries, 
+	title=Teorema~\thetcbcounter: #2, 
+	#1
+}
+
+% disponi definizioni
+\newtcolorbox[auto counter, number within=section]{definition}[2][]{%
+	colback=red!10,
+	colframe=red!40!black,
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries,
+	title=Definizione~\thetcbcounter: #2,
+	#1
+}
+
+% disponi codice
+\usepackage{listings}
+\usepackage[table]{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{codestyle}{
+		backgroundcolor=\color{black!5}, 
+		commentstyle=\color{codegreen},
+		keywordstyle=\bfseries\color{magenta},
+		numberstyle=\sffamily\tiny\color{black!60},
+		stringstyle=\color{green!50!black},
+		basicstyle=\ttfamily\footnotesize,
+		breakatwhitespace=false,         
+		breaklines=true,                 
+		captionpos=b,                    
+		keepspaces=true,                 
+		numbers=left,                    
+		numbersep=5pt,                  
+		showspaces=false,                
+		showstringspaces=false,
+		showtabs=false,                  
+		tabsize=2
+}
+
+\lstdefinestyle{shellstyle}{
+		backgroundcolor=\color{black!5}, 
+		basicstyle=\ttfamily\footnotesize\color{black}, 
+		commentstyle=\color{black}, 
+		keywordstyle=\color{black},
+		numberstyle=\color{black!5},
+		stringstyle=\color{black}, 
+		showspaces=false,
+		showstringspaces=false, 
+		showtabs=false, 
+		tabsize=2, 
+		numbers=none, 
+		breaklines=true
+}
+
+
+\lstdefinelanguage{assembler}{ 
+  keywords={AAA, AAD, AAM, AAS, ADC, ADCB, ADCW, ADCL, ADD, ADDB, ADDW, ADDL, AND, ANDB, ANDW, ANDL,
+        ARPL, BOUND, BSF, BSFL, BSFW, BSR, BSRL, BSRW, BSWAP, BT, BTC, BTCB, BTCW, BTCL, BTR, 
+        BTRB, BTRW, BTRL, BTS, BTSB, BTSW, BTSL, CALL, CBW, CDQ, CLC, CLD, CLI, CLTS, CMC, CMP,
+        CMPB, CMPW, CMPL, CMPS, CMPSB, CMPSD, CMPSW, CMPXCHG, CMPXCHGB, CMPXCHGW, CMPXCHGL,
+        CMPXCHG8B, CPUID, CWDE, DAA, DAS, DEC, DECB, DECW, DECL, DIV, DIVB, DIVW, DIVL, ENTER,
+        HLT, IDIV, IDIVB, IDIVW, IDIVL, IMUL, IMULB, IMULW, IMULL, IN, INB, INW, INL, INC, INCB,
+        INCW, INCL, INS, INSB, INSD, INSW, INT, INT3, INTO, INVD, INVLPG, IRET, IRETD, JA, JAE,
+        JB, JBE, JC, JCXZ, JE, JECXZ, JG, JGE, JL, JLE, JMP, JNA, JNAE, JNB, JNBE, JNC, JNE, JNG,
+        JNGE, JNL, JNLE, JNO, JNP, JNS, JNZ, JO, JP, JPE, JPO, JS, JZ, LAHF, LAR, LCALL, LDS,
+        LEA, LEAVE, LES, LFS, LGDT, LGS, LIDT, LMSW, LOCK, LODSB, LODSD, LODSW, LOOP, LOOPE,
+        LOOPNE, LSL, LSS, LTR, MOV, MOVB, MOVW, MOVL, MOVSB, MOVSD, MOVSW, MOVSX, MOVSXB,
+        MOVSXW, MOVSXL, MOVZX, MOVZXB, MOVZXW, MOVZXL, MUL, MULB, MULW, MULL, NEG, NEGB, NEGW,
+        NEGL, NOP, NOT, NOTB, NOTW, NOTL, OR, ORB, ORW, ORL, OUT, OUTB, OUTW, OUTL, OUTSB, OUTSD,
+        OUTSW, POP, POPL, POPW, POPB, POPA, POPAD, POPF, POPFD, PUSH, PUSHL, PUSHW, PUSHB, PUSHA, 
+				PUSHAD, PUSHF, PUSHFD, RCL, RCLB, RCLW, MOVSL, MOVSB, MOVSW, STOSL, STOSB, STOSW, LODSB, LODSW,
+				LODSL, INSB, INSW, INSL, OUTSB, OUTSL, OUTSW
+        RCLL, RCR, RCRB, RCRW, RCRL, RDMSR, RDPMC, RDTSC, REP, REPE, REPNE, RET, ROL, ROLB, ROLW,
+        ROLL, ROR, RORB, RORW, RORL, SAHF, SAL, SALB, SALW, SALL, SAR, SARB, SARW, SARL, SBB,
+        SBBB, SBBW, SBBL, SCASB, SCASD, SCASW, SETA, SETAE, SETB, SETBE, SETC, SETE, SETG, SETGE,
+        SETL, SETLE, SETNA, SETNAE, SETNB, SETNBE, SETNC, SETNE, SETNG, SETNGE, SETNL, SETNLE,
+        SETNO, SETNP, SETNS, SETNZ, SETO, SETP, SETPE, SETPO, SETS, SETZ, SGDT, SHL, SHLB, SHLW,
+        SHLL, SHLD, SHR, SHRB, SHRW, SHRL, SHRD, SIDT, SLDT, SMSW, STC, STD, STI, STOSB, STOSD,
+        STOSW, STR, SUB, SUBB, SUBW, SUBL, TEST, TESTB, TESTW, TESTL, VERR, VERW, WAIT, WBINVD,
+        XADD, XADDB, XADDW, XADDL, XCHG, XCHGB, XCHGW, XCHGL, XLAT, XLATB, XOR, XORB, XORW, XORL},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{\#},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{language=java, style=codestyle}
+
+% disponi sezioni
+\usepackage{titlesec}
+
+\titleformat{\section}
+	{\sffamily\Large\bfseries} 
+	{\thesection}{1em}{} 
+\titleformat{\subsection}
+	{\sffamily\large\bfseries}   
+	{\thesubsection}{1em}{} 
+\titleformat{\subsubsection}
+	{\sffamily\normalsize\bfseries} 
+	{\thesubsubsection}{1em}{}
+
+% tikz
+\usepackage{tikz}
+
+% float
+\usepackage{float}
+
+% grafici
+\usepackage{pgfplots}
+\pgfplotsset{width=10cm,compat=1.9}
+
+% disponi alberi
+\usepackage{forest}
+
+\forestset{
+	rectstyle/.style={
+		for tree={rectangle,draw,font=\large\sffamily}
+	},
+	roundstyle/.style={
+		for tree={circle,draw,font=\large}
+	}
+}
+
+% disponi algoritmi
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\makeatletter
+\renewcommand{\ALG@name}{Algoritmo}
+\makeatother
+
+% disponi numeri di pagina
+\usepackage{fancyhdr}
+\fancyhf{} 
+\fancyfoot[L]{\sffamily{\thepage}}
+
+\makeatletter
+\fancyhead[L]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@title \ \@date}}} 
+\fancyhead[R]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@author}}}
+\makeatother
+
+\begin{document}
+% sezione (data)
+\section{Lezione del 06-11-25}
+
+% stili pagina
+\thispagestyle{empty}
+\pagestyle{fancy}
+
+% testo
+Continuiamo con la discussione di costrutti avanzati del linguaggio Java.
+
+\subsubsection{Classi anononime}
+Le classi \textbf{anonime} sono un costrutto del linguaggio che permette di specializzare classi parent direttamente quando si instanzia la specializzazione.
+La sintassi è la seguente:
+\begin{lstlisting}[language=java, style=codestyle]	
+// class Libro ...
+Libro libroJava = new Libro("Java") {
+    @Override
+    public String descrizione() {
+        return "Libro che fa venire gran mal di testa.";
+    }
+}
+\end{lstlisting}
+
+In questo caso la classe figlia che specializza \textit{Libro} viene dichiarata ed instanziata contestualmente.
+La classe è effettivamente anonima in quanto non si può riferire da altre parti nel codice.
+
+\subsubsection{Espressioni lambda}
+Le \textbf{espressioni lambda} o \textit{funzioni lambda} sono supportate in Java attraverso la sintassi a freccia tipica del JavaScript.
+
+In particolare, si può dichiarare una funzione lambda catturando il contesto e quindi definendo la funzione con la freccia \lstinline|->|:
+\begin{lstlisting}[language=java, style=codestyle]	
+List<String> l = new ArrayList<String>();
+// ...
+l.forEach((s) -> System.out.println(s));
+\end{lstlisting}
+
+Nell'esempio, il metodo \lstinline|forEach()| accetta come argomento una funzione lambda, che accetta come argomento una stringa (catturata in \lstinline|s|). In seguito, esegue tale funzione su ogni elemento della lista, ogni volta collassando \lstinline|s| all'elemento corrente della lista.
+
+\par\smallskip
+
+Espressioni lambda e classi anonime sono fra di loro molto simili.
+Effettivamente, il comportamento dell'ultimo esempio si potrebbe avere come:
+\begin{lstlisting}[language=java, style=codestyle]	
+List<String> l = new ArrayList<String>();
+// ...
+l.forEach(new Consumer<String>() {
+    @Override
+    public void accept(String s) {
+        System.out.println(s);
+    }
+});
+\end{lstlisting}
+
+In questo caso il metodo \lstinline|forEach()| accetta anzichè un funzionale lambda, un oggetto di tipo \textit{Consumer}. Questo si comporta come una lambda, accentando un argomento attraverso il metodo \lstinline|accept()| che viene ridefinito contestualmente all'instanziazione attraverso una classe anonima.
+
+\subsection{Stream}
+In Java 8 viene implementata l'interfaccia \textit{Stream}.
+Questa server ad astrarre oggetti di tipo \textbf{stream}, cioè sequenze di elementi che supportano operazioni.
+
+Le operazioni sugli stream in Java possono essere \textit{sequenziali} e \textit{parallele}: di default si assumono seriali, se richiesto possono diventare parallele.
+
+L'approccio agli stream è \textit{funzionale}: sono definite funzioni che prendono in argomento stream, e restituiscono stream o altri risultati.
+Questo significa che lo stato di ogni stream non viene mutato, ma se ne creano di nuovi.
+
+Le operazioni sugli stream possono essere di 2 tipi:
+\begin{itemize}
+	\item Operazioni \textbf{intermedie}: danno come risultato altri stream. Queste possono avere stato (come ad esempio le operazioni di sorting) o non avere stato;
+	\item Operazioni \textbf{terminali}: danno un risultato finale, e non altri stream su cui elaborare. 
+\end{itemize}
+
+Spesso si usano funzioni lambda per modificare il comportamento delle operazioni.
+
+Un'esempio di come possono essere usati gli stream è il seguente:
+\begin{lstlisting}[language=java, style=codestyle]	
+Stream<Elem> s = Stream.of(/* ... */);
+long res = s
+	.skip(10)													// salta 10 elementi
+	.filter(e -> e.getValore() > 0.5)	// filtra quelli > 0.5
+	.map(e -> e.getValore() + 1)			// mappali agli elementi + 1
+	.distinct()												// prendi elementi distinti
+	.count()													// conta gli elementi
+\end{lstlisting}
+
+Gli stream possono essere creati a partire da array, liste o tipi insieme simili.
+
+\subsection{GC}
+Veniamo quindi alla trattazione del \textbf{GC} (\textit{Garbage Collector}) in Java.
+Questo è un componente che si occupa di liberare, al posto nostro, la memoria che non utilizziamo più.
+
+Il garbage collector può essere chiamato direttamente dal programma accedendo ad un metodo della classe \textit{System}:
+\begin{lstlisting}[language=java, style=codestyle]	
+// chiama il GC
+System.gc();
+\end{lstlisting}
+
+Questo invoca effettivamente il GC, e solitamente non è necessario (in quanto il GC automaticamente viene messo in esecuzione quando necessario).
+
+\subsubsection{GC generazionali}
+La maggior parte delle implementazioni di JVM odierne sfrutta i cosiddetti GC \textbf{generazionali}.
+
+Gli oggetti si dividono effettivamente in 2 categorie:
+\begin{itemize}
+	\item Oggetti che vivono poco;
+	\item Oggetti che vivono molto.
+\end{itemize}
+
+I GC generazionali si basano sull'idea di dividere in \textit{generazioni} gli oggetti creati sulla base del tempo da cui sono stati instanziati, o equivalentemente il tempo per cui sono \textit{sopravvissuti} all'interno del nostro programma.
+
+Si adotta quindi un sistema simile alle code multiple dove:
+\begin{enumerate}
+	\item Gli oggetti appena creati vengono messi nella \textbf{YG} (\textit{Young Generation});
+	\item Dopo un certo tempo, gli oggetti sopravvissuti della YG vengono spostati nella \textbf{OG} (\textit{Old Generation});
+	\item Infine, si prevede una \textbf{PG} (\textit{Permanent Generation}) per gli oggetti permanenti (cioò che non verrranno mai deallocati).
+\end{enumerate}
+
+A questo punto la garbage collection può essere effettuata come segue:
+\begin{itemize}
+	\item \textbf{Minor} garbage collection, più frequente e solo sulla YG;
+	\item \textbf{Major} garbage collection, meno frequente (quando lo spazio dedicato all'OG finisce) e solo sulla OG.
+\end{itemize}
+
+Lo spazio dove vengono allocati gli oggetti della YG viene detto \textbf{eden}. Gli oggetti che sopravvivono alla minor garbage collection vengono quindi spostati nello spazio \textbf{survivor}. Infine, gli oggetti della OG vengono allocati nello spazio \textbf{old} (o \textit{tenured}).
+
+\subsubsection{Esecuzione "stop the world"}
+Le operazioni del GC sono solitamente di tipo \textbf{"stop the world"}, cioè interrompono l'intera esecuzione del programma.
+
+Anche per questo motivo si decide di divedere fra minor garbage collection e major garbage collection: avere garbage collection di oggetti grandi troppo spesso porterebbe a rallentamenti considerevoli del programma in esecuzione.
+
+\par\smallskip
+
+In ogni caso, per visualizzare statistiche sull'operato del GC (ad esempio dimensione della memoria libera nell'eden o le altre pool di memoria) si possono usare programmi di profiling.
+Uno dei più celebri è \textit{VisualVM}.
+
+\subsection{Design pattern}
+I \textbf{design pattern} sono, appunto, pattern che emergono spesso in fase di progettazione, sopratutto nell'ambito dell'OOP. 
+
+Si dividono in:
+\begin{itemize}
+	\item \textbf{Creazionali}: legati al modo con cui vengono istanziati gli oggetti;
+	\item \textbf{Strutturali}: focalizzati sulla composizione e sulle relazioni tra oggetti e classi;
+	\item \textbf{Comportamentali}: riguardano il modo con cui gli oggetti interagiscono fra di loro e si scambiano informazioni.
+\end{itemize}
+
+\subsubsection{Pattern creazionali}
+I pattern \textbf{creazionali} riguardano il modo in cui vengono creati gli oggetti.
+Questi sono:
+\begin{itemize}
+	\item \textbf{Singleton}: un oggetto che deve esistere in unica istanza in tutto il sistema, e fornire un modo per accedere a tale istanza. L’idea centrale è impedire la creazione di più istanze di una stessa classe in contesti dove la molteplicità non ha senso, come un
+gestore delle configurazioni, un logger centralizzato o un registro delle connessioni attive. 
+
+Vediamo ad esempio una classe logger:
+\begin{lstlisting}[language=C++, style=codestyle]	
+public class Logger {
+	private Logger() {
+		// qui si inizializza (1 volta) il logger
+	}
+
+	private static class Holder {
+		private static final Logger instance = new Logger();
+	}
+
+	public static Logger getInstance() {
+		return Holder.instance;
+	}
+
+	public void log() {
+		// ...
+	}
+}
+\end{lstlisting}
+
+Notiamo come il modo in cui implementiamo l'unicità del singleton è differente da quella che avevamo visto in 2.5. Lì, infatti, avevamo usato un riferimento esplicito e statico ad un istanza di classe che gestivamo.
+Qui scegliamo invece di usare una classe statica innestata, che mantiene un'istanza finale di classe \textit{Logger}.
+
+Questa soluzione ci permette di ottenre lo stesso comportamento, ma in maniera \textit{thread-safe}: possiamo infatti usare il meccanismo di caricamento della JVM stessa per realizzare l'instanziazione condizionale della classe.
+
+	\item \textbf{Factory method}: un interfaccia per creare oggetti, che lascia che le sottoclassi decidano quale oggetto istanziare. Sostanzialmente è un modo per lasciare che le sottoclassi (o le classi che implementano interfacce) si occupino dell'instanziazione della classe padre. Risulta utile quando la classe che deve creare un oggetto non conosce in anticipo il tipo esatto da istanziare oppure desidera lasciare alle sottoclassi il compito di decidere quale tipo restituire. Inoltre, permette il disaccoppiamento tra il codice che richiede l’oggetto e il codice che lo costruisce.
+
+Vediamo ad esempio un interfaccia \textit{Notify}, per notifiche di vario tipo, che viene specializzata in \textit{SmsNotification} e \textit{EmailNotification}. Prevediamo di usare un metodo fabbrica per gestire l'istanziazione di questo tipo di notifiche:
+\begin{lstlisting}[language=java, style=codestyle]	
+interface Notify {
+	void send(String msg);
+}
+
+// prodotto concreto
+class SmsNotification implements Notify {
+	@Override
+	public void send(String msg) {
+		System.out.println("SMS sent: " + msg);
+	}
+}
+// prodotto concreto
+class EmailNotification implements Notify {
+	@Override
+	public void send(String msg) {
+		System.out.println("Email sent: " + msg);
+	}
+}
+
+// interfaccia di creazione
+interface NotificationCreator {
+	Notify createNotification(); // factory method
+}
+
+// concrete creator
+class EmailCreator implements NotificationCreator {
+	@Override
+	public Notify createNotification() { // implementazione factory method
+		return new EmailNotification();
+	}
+}
+// concrete creator
+class SmsCreator implements NotificationCreator {
+	@Override
+	public Notify createNotification() { // implementazione factory method
+		return new SmsNotification();
+	}
+}
+
+public class Example {
+	public static void main(String[] args) {
+		NotificationCreator creator = new EmailCreator();
+		Notify notif = creator.createNotification();
+		notif.send("Login to your account");
+		// user switches to sms notifications
+		creator = new SmsCreator();
+		notif = creator.createNotification();
+		notif.send("Password changed");
+	}
+}
+\end{lstlisting}
+	\item \textbf{Abstract Factory}:
+	\item \textbf{Builder}: consiste nel separare la costruzione di un'oggetto complesso dalla sua rappresentazione. Risulta utile quando è necessario fornire un numero molto grande di parametri in fase di costruzione.
+
+Vediamo ad esempio una classe computer piuttosto complessa:
+\begin{lstlisting}[language=java, style=codestyle]	
+class Computer {
+	private final String cpu;
+	private final int ram;
+	private final boolean hasBluetooth;
+	private final boolean hasWifi;
+	
+	// costruttore privato
+	private Computer(ComputerBuilder builder) {
+		this.cpu = builder.cpu;
+		this.ram = builder.ram;
+		this.hasBluetooth = builder.hasBluetooth;
+		this.hasWifi = builder.hasWifi;
+	}
+	
+	public void mostra() {
+		System.out.println("CPU: " + cpu);
+		System.out.println("RAM: " + ram);
+		System.out.println("Bluetooth: " + (hasBluetooth ? "Y" : "N"));
+		System.out.println("Wi-Fi: " + (hasWifi ? "Y" : "N"));
+	}
+}
+\end{lstlisting}
+ed implementiamo una classe builder che ne semplifichi l'instanziazione:
+\begin{lstlisting}[language=java, style=codestyle]	
+// classe builder annidata statica
+public static class ComputerBuilder {
+	private final String cpu;
+	private final int ram;
+	private boolean hasBluetooth = false;
+	private boolean hasWifi = false;
+
+	public ComputerBuilder(String cpu, int ram) {
+		this.cpu = cpu;
+		this.ram = ram;
+	}
+	public ComputerBuilder conBluetooth() {
+		this.hasBluetooth = true;
+		return this;
+	}
+	public ComputerBuilder conWifi() {
+		this.hasWifi = true;
+		return this;
+	}
+	public Computer build() {
+		return new Computer(this);
+	}
+}
+\end{lstlisting}
+A questo punto costruire un nuovo computer sarà molto semplice, in quanto ogni chiamata a un metodo di \textit{ComputerBuilder} restituisce ancora un istanza di \textit{ComputerBuilder}:
+\begin{lstlisting}[language=java, style=codestyle]
+public class Esempio {
+	public static void main(String[] args) {
+		Computer pc =
+		new Computer.ComputerBuilder("Intel i5", 16)
+			.conBluetooth()
+			.conWifi()
+			.build();
+			pc.mostra();
+		}
+}
+\end{lstlisting}
+	\item \textbf{Prototype}:
+\end{itemize}
+
+\end{document}

@@ -238,8 +238,6 @@ Il thread che invoca \lstinline|wait()|:
 \begin{itemize}
 	\item Sospende la propria esecuzione;
 	\item Rilascia il lock sull'oggetto;
-	\item Riacquisisce automaticamente il lock quando esece dalla wait.Sospende la propria esecuzione;
-	\item Rilascia il lock sull'oggetto;
 	\item Riacquisisce automaticamente il lock quando esece dalla wait.
 \end{itemize}
 
@@ -249,10 +247,7 @@ In questo caso il thread che invoca \lstinline|wait()|:
 \begin{itemize}
 	\item Sospende la propria esecuzione;
 	\item Rilascia il lock sull'oggetto;
-	\item Aspetta i millisecondi di timeout: se li supera esce forzatamente riacquisendo i lock;
-	\item Riacquisisce automaticamente il lock quando esece dalla wait.Sospende la propria esecuzione;
-	\item Rilascia il lock sull'oggetto;
-	\item Riacquisisce automaticamente il lock quando esece dalla wait.
+	\item Aspetta i millisecondi di timeout: se li supera esce forzatamente riacquisendo i lock.
 \end{itemize}
 
 La \lstinline|wait(timeout)| con \lstinline|timeout| $= 0$ corrisponde alla \lstinline|wait()| (timeout infinito).

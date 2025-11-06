@@ -347,6 +347,19 @@ Le classi innestate non statiche sono dette \textit{classi interne}.
 	\item Possono invece accedere ai campi privati della classe esterna: se non ci sono ambiguità, infatti, il riferimento this sia a sé stesse che alla classe esterna può essere omesso.
 \end{itemize}
 
+\subsubsection{Metodi default}
+I \textbf{metodi di default} servono a coprire un buco lasciato dalle interfacce.
+Quando si definisce un metodo all'interno di un'interfaccia, infatti, server che ogni classe che implementa tale interfaccia implementi la sua versione di tale metodo.
+Un metodo dichiarato come \lstinline|default| all'interno di un'interfaccia, invece, permette di specificare un'implementazione predefinita, che viene quindi usata da tutte le interfacce (può eventualmente essere ridefinita).
+
+Il problema è chiaramente la sovrapposizione che si ha data dalla definizione e implementazione in più interfacce (o anche solo in una classe base e quindi in interfacce) di una classe.
+In questo caso si deve usare il nome completamente qualificato del metodo (cioè riferirsi esattamente alla classe o all'interfaccia la cui versione del metodo vogliamo).
+
+\par\smallskip
+
+Notiamo a questo punto che si possono definire anche metodi statici all'interno di interfacce (senza doverli specificare come \lstinline|default|).
+Questi sono metodi implementati direttamente nelle interfacce (tipicamente di utilità), legati all'interfaccia e non disponibili a classi che non implementano tale interfaccia.
+
 \subsubsection{Argomenti variabili}
 Java permette di avere metodi con numero di argomenti variabile (\textit{varargs}) usando la solita sintassi coi tre puntini.
 Gli argomenti risultano quindi accessibili come vettori.
@@ -477,18 +490,5 @@ String s = (String) c1.prendi();
 Questo chiaramente ci riporta alla situazione con cui abbiamo aperto la sezione: questo non ci turba, in quanto con gli wildcard dobbiamo esplicitamente specificare che vogliamo riferirci a classi con tipi generici diversi fra di loro (quindi ci portiamo in una situazione dove siamo soggetti ad errori).
 
 Notiamo poi che le wildcard possono essere anche più specifiche: in particolare, si possono usare wildcard con classi base per riferirsi a tipi generici classi specializzate.
-
-\subsubsection{Metodi default}
-I \textbf{metodi di default} servono a coprire un buco lasciato dalle interfacce.
-Quando si definisce un metodo all'interno di un'interfaccia, infatti, server che ogni classe che implementa tale interfaccia implementi la sua versione di tale metodo.
-Un metodo dichiarato come \lstinline|default| all'interno di un'interfaccia, invece, permette di specificare un'implementazione predefinita, che viene quindi usata da tutte le interfacce (può eventualmente essere ridefinita).
-
-Il problema è chiaramente la sovrapposizione che si ha data dalla definizione e implementazione in più interfacce (o anche solo in una classe base e quindi in interfacce) di una classe.
-In questo caso si deve usare il nome completamente qualificato del metodo (cioè riferirsi esattamente alla classe o all'interfaccia la cui versione del metodo vogliamo).
-
-\par\smallskip
-
-Notiamo a questo punto che si possono definire anche metodi statici all'interno di interfacce (senza doverli specificare come \lstinline|default|).
-Questi sono metodi implementati direttamente nelle interfacce (tipicamente di utilità), legati all'interfaccia e non disponibili a classi che non implementano tale interfaccia.
 
 \end{document}
