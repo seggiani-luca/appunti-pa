@@ -497,8 +497,7 @@ class Simulation {
 }
 \end{lstlisting}
 
-\item \textbf{Flyweight}: utile quando abbiamo un grande numero di oggetti che
-condividono caratteristiche immutabili: decidiamo di utilizzare la condivisione delle risorse per risparmiare memoria.
+\item \textbf{Flyweight}: utile quando abbiamo un grande numero di oggetti che condividono caratteristiche immutabili: decidiamo di utilizzare la condivisione delle risorse per risparmiare memoria.
 Sostanzialmente, quindi, l'approccio è simile a quello del \textit{pooling}.
 
 Vediamo ad esempio un sistema che gestisce più caselle, che possono condividere lo stesso tipo:
@@ -898,13 +897,422 @@ public class Example {
 }
 \end{lstlisting}
 
-# finisci 
-• Memento
-• Observer
-• State
-• Strategy
-• Template method
-• Visitor
+\item \textbf{Memento}: il memento è un pattern secondo il quale immagazziniamo lo stato (immutabile) di un oggetto per poterlo ricaricare in un istante successivo. Il \textit{memento} è quindi l'oggetto immutabile che mantiene lo stato, mentre un'altro oggetto (detto \textit{caretaker}) sarà quello che si occuperà di prelevare, memorizzare e restituire successivamente lo stato.
+
+Poniamo l'esempio di un sistema di salvataggio in un videogioco:
+\begin{lstlisting}[language=java, style=codestyle]	
+// memento
+class PlayerState {
+  private final int life;
+  private final int x, y;
+  private final List<String> inventory;
+  
+  public PlayerState(int life, int x, int y, List<String> inventory) {
+    this.life = life;
+    this.x = x;
+    this.y = y;
+    // Crea una copia della lista
+    this.inventory = new ArrayList<>(inventory);
+  }
+  public int getLife() {
+    return life;
+  }
+  public int getX() {
+    return x;
+  }
+  public int getY() {
+    return y;
+  }
+  public List<String> getInventory() {
+    // restituisce una copia non modificabile
+    return Collections.unmodifiableList(inventory);
+  }
+}
+
+// oggetto originatore dei dati
+class Player {
+  private int life = 100;
+  private int x = 0, y = 0;
+  private final List<String> inventory = new ArrayList<>();
+  
+  public void move(int dx, int dy) {
+    x += dx;
+    y += dy;
+  }
+  public void damage(int amount) {
+    life -= amount;
+  }
+  public void addItem(String item) {
+    inventory.add(item);
+  }
+  public void printStatus() {
+    System.out.println(
+        "Life=" + life + ", pos=(" + x + "," + y + "), items=" + inventory);
+  }
+  // crea un memento dallo stato
+  public PlayerState saveState() {
+    return new PlayerState(life, x, y, inventory);
+  }
+  // ripristina lo stato da un memento
+  public void restoreState(PlayerState m) {
+    this.life = m.getLife();
+    this.x = m.getX();
+    this.y = m.getY();
+    inventory.clear();
+    // Li riaggiunge tutti
+    inventory.addAll(m.getInventory());
+  }
+}
+
+// caretaker
+class SaveManager {
+  private PlayerState checkpoint;
+  
+  public void save(PlayerState m) {
+    checkpoint = m;
+  }
+  public PlayerState load() {
+    return checkpoint;
+  }
+}
+\end{lstlisting}
+	
+A questo punto salvataggio e caricamento dello stato del giocatore sono banali come:
+\begin{lstlisting}[language=java, style=codestyle]	
+Player player = new Player();
+SaveManager saver = new SaveManager();
+
+saver.save(player.playerState()); // salva
+
+// ...
+
+player.restoreState(saver.load()); // carica
+\end{lstlisting}
+
+\item \textbf{Observer}: questo pattern permette di realizzare un sistema di \textit{eventi}, anche detto un sistema \textit{publish-subscribe}, dove un certo oggetto (detto \textit{osservatore}) sottoscrive agli eventi generati da altri oggetti (che vengono detti \textit{osservati}).
+
+	Questo può essere utile nel caso di oggetti che devono propagare cambiamenti di stato verso l'alto, senza necessariamente chi è interesato ad elaborare tali cambiamenti.
+
+	Un esempio può essere quello dell'emulatore visto per le \textit{facade}: poniamo infatti che ogni componente sia capace di generare un evento, e che la nostra facade voglia rilevare tali eventi:
+\begin{lstlisting}[language=java, style=codestyle]	
+// evento
+class SimulationEvent {
+	private final String mess;
+
+	public String getMess() {
+		return mess;
+	}
+}
+
+interface SimulationListener {
+	void onEvent(SimulationEvent event); 
+}
+
+// componente astratto
+abstract class SimulationComponent {
+	private List<SimulationListener> listeners = new ArrayList<>();
+
+	void subscribe(SimulationListener listener) {
+		listeners.add(listener);
+	}	
+
+	void simulate();
+	void raiseEvent(SimulationEvent event) {
+		for(SimulationListener listener : listeners) {
+			listener.onEvent(event);
+		}
+	}
+}
+
+// componenti concreti
+
+class Bus extends SimulationComponent {
+	// ...
+}
+class Memory extends SimulationComponent {
+	// ...
+}
+class Processor extends SimulationComponent {
+	// ...
+}
+
+// simulazione concreta, rappresenta la facade del sistema
+class Simulation implements SimulationListener {
+	Bus bus;
+	Memory mem;
+	Processor proc;
+
+	public Simulation(Bus bus, Memory mem, Processor proc) {
+		this.bus = bus;
+		this.mem = mem;
+		this.proc = proc;
+	}
+
+	public void init() {
+		bus.subscribe(this);
+		mem.subscribe(this);
+		proc.subscribe(this);
+	}
+
+	public void onEvent(SimulationEvent e) {
+		System.out.println(e.getMess());
+	}
+
+	public void step() {
+		// la facade nasconde la complessita'
+		bus.step();
+		mem.step();
+		proc.step();
+	}
+}
+\end{lstlisting}
+	
+\item \textbf{State}: vogliamo incapsulare lo \textit{stato} di un oggetto all'interno di classi, e gestire tali stati attraverso un \textit{contesto} comune. Le chiamate al contesto verrano redirette allo stato corrente, e lo stato corrente avrà un riferimento al contesto per poter aggiornare lo stato.
+
+	Facciamo l'esempio di un riproduttore musicale che ha 2 stati: lo stato in \textit{pausa} e lo stato in \textit{riproduzione} di musica:
+\begin{lstlisting}[language=java, style=codestyle]	
+// interfaccia di stato
+interface PlayerState {
+  void pressButton(MusicPlayer player);
+}
+
+// stati concreti
+class PlayingState implements PlayerState {
+  @Override
+  public void pressButton(MusicPlayer player) {
+    System.out.println("Pausing music...");
+    player.setState(new PausedState());
+  }
+}
+
+class PausedState implements PlayerState {
+  @Override
+  public void pressButton(MusicPlayer player) {
+    System.out.println("Playing music...");
+    player.setState(new PlayingState());
+  }
+}
+
+// contesto
+class MusicPlayer {
+  private PlayerState state = new PausedState(); // stato iniziale
+  public void setState(PlayerState state) {
+    this.state = state;
+  }
+  public void pressButton() {
+    state.pressButton(this);
+  }
+}
+
+public class Esempio {
+  public static void main(String[] args) {
+    MusicPlayer player = new MusicPlayer();
+    player.pressButton(); // Playing
+    player.pressButton(); // Pausing
+    player.pressButton(); // Playing
+  }
+}
+\end{lstlisting}
+
+\item \textbf{Strategy}: questo pattern consiste nel prendere famiglie di algoritmi (algoritmi con gli stessi argomenti che danno risultati dello stesso tipo, quindi rappresentabili da interfacce), ed incapsularli per renderli intercambiabili.
+	
+	Gli oggetti che useranno gli algoritmi potranno quindi vedere la strategia usata cambiare nel tempo sulla base di diverse implementazioni.
+
+	Poniamo l'esempio di un validatore di password che può usare diversi algoritmi di validazione:
+\begin{lstlisting}[language=java, style=codestyle]	
+// interfaccia di strategia
+interface PasswordStrategy {
+  boolean isValid(String password);
+}
+
+// strategie concrete
+
+class SimplePassword implements PasswordStrategy {
+  public boolean isValid(String pwd) {
+      // piu' di 5 caratteri
+      // ...
+  }
+}
+
+class StrongPassword implements PasswordStrategy {
+  public boolean isValid(String pwd) {
+      // piu' di 7 caratteri
+      // ....
+  }
+}
+
+// contesto delle strategie
+class PasswordValidator {
+  private PasswordStrategy strategy;
+  public void setStrategy(PasswordStrategy strategy) {
+    this.strategy = strategy;
+  }
+  public void validate(String pwd) {
+    if (strategy == null) {
+      System.out.println("Nessuna strategia impostata!");
+      return;
+    }
+    System.out.println(
+        "Password \"" + pwd + "\" valida? " + strategy.isValid(pwd));
+  }
+}
+
+public class Example {
+  public static void main(String[] args) {
+    PasswordValidator validator = new PasswordValidator();
+    validator.setStrategy(new SimplePassword());
+    validator.validate("ciao12"); // true
+    validator.setStrategy(new StrongPassword());
+    validator.validate("ciao12"); // false
+    validator.validate("Ciao1234"); // true
+  }
+}
+\end{lstlisting}
+
+\item \textbf{Template method}: l'idea è di definire lo \textit{"scheletro"} di un algoritmo che definisce un operazione, mantenendo astratti i passaggi dell'esecuzione di tale algoritmo. In seguito, si potrà specializzare la classe, riempiendo i passaggi astratti con implementazioni concrete.
+
+Vediamo un esempio:
+\begin{lstlisting}[language=java, style=codestyle]
+// template method
+abstract class Processor {
+	public final void() {
+		step0();
+		step1();
+		step2();
+	}
+
+	protected abstract void step0();
+	protected abstract void step1();
+	protected abstract void step2();
+}
+
+// implementazioni concrete
+
+class ProcessorA {
+	protected void step0() {
+		// ...
+	}
+	protected void step1() {
+		// ...
+	}
+	protected void step2() {
+		// ...
+	}
+}
+
+class ProcessorB {
+	protected void step0() {
+		// ...
+	}
+	protected void step1() {
+		// ...
+	}
+	protected void step2() {
+		// ...
+	}
+}
+\end{lstlisting}
+
+\item \textbf{Visitor}: fornisce un alternativa alla overriding di metodi astratti. Si prevede infatti un a certa classe, detta \textit{visitor}, che prevede più metodi, ognuno capace di gestire un istanza di classe in una certa gerarchia di classi.
+
+A questo punto le classi nella gerarchia dovranno solo implementare un metodo per l'accettazione del visitor.
+
+Vediamo l'esempio banale, che è quello di un visitor per il calcolo delle aree di diversi specializzazioni di una classe \textit{Shape}:
+\begin{lstlisting}[language=java, style=codestyle]	
+// elemento astratto
+interface Shape {
+  void accept(ShapeVisitor visitor);
+}
+
+// elementi concreti
+class Circle implements Shape {
+  double radius;
+  
+  public Circle(double radius) {
+    this.radius = radius;
+  }
+  public double getRadius() {
+    return radius;
+  }
+  
+  // questo va ridefinito qui (!)
+  // non possiamo usare this nei metodi default
+  @Override
+  public void accept(ShapeVisitor visitor) {
+    visitor.visit(this);
+  }
+}
+
+class Rectangle implements Shape {
+  double w, h;
+
+  public Rectangle(double w, double h) {
+    this.w = w;
+    this.h = h;
+  }
+  public double getWidth() {
+    return w;
+  }
+  public double getHeight() {
+    return h;
+  }
+
+  // come sopra
+  @Override
+  public void accept(ShapeVisitor visitor) {
+    visitor.visit(this);
+  }
+}
+
+// visitor
+class AreaVisitor {
+  public void visit(Circle c) {
+    double area = Math.PI * c.getRadius() * c.getRadius();
+    System.out.println("Area cerchio: " + area);
+  }
+
+  public void visit(Rectangle r) {
+    double area = r.getWidth() * r.getHeight();
+    System.out.println("Area rettangolo: " + area);
+  }
+}
+\end{lstlisting}
+
+A questo punto si può calcolare l'area di una qualsiasi forma con:
+\begin{lstlisting}[language=java, style=codestyle]	
+Shape rect = new Rectangle(2, 5);
+Shape circ = new Circle(3);
+
+AreaVisitor visitor = new AreaVisitor();
+rect.accept(visitor); // area rettangolo
+circ.accept(visitor); // area cerchio 
+\end{lstlisting}
+
+Questo è utile, in quanto l'alternativa basata sull'ereditarietà prevedeva la definizione di un qualche metodo:
+\begin{lstlisting}[language=java, style=codestyle]	
+public double calcola(Shape s) {
+	if (s instanceof Circle) {
+		Circle c = (Circle) s;
+		return Math.PI * c.getRadius() * c.getRadius();
+	} else if (s instanceof Rectangle) {
+		Rectangle r = (Rectangle) s;
+		return r.getWidth() * r.getHeight();
+	}
+	throw new IllegalArgumentException("Forma sconosciuta");
+}
+\end{lstlisting}
+che è molto brutto in quanto:
+\begin{itemize}
+	\item Presenta molti \lstinline|if-else|;
+	\item Richiede il costrutto \lstinline|instanceof|, e quindi il controllo dinamico del tipo di classe (con riflessione).
+\end{itemize}
+
+Il nostro approccio è più compatto e rimanda la discriminazione fra classi ad un meccanismo base del linguaggio (l'overriding delle funzioni con stesso nome ma diversi argomenti).
+
+\par\smallskip
+
+Notiamo infine che un altro vantaggio è quello che si possono definire più visitatori (magari da un interfaccia comune), che si occupano di implementare operazioni diverse sugli oggetti che visitano (senza dover modificare gli oggetti stessi).
+
 \end{itemize}
 
 \par\smallskip
