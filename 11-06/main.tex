@@ -453,7 +453,102 @@ public class Example {
 	}
 }
 \end{lstlisting}
-	\item \textbf{Abstract Factory}:
+	\item \textbf{Abstract factory}: qui l'idea è di fornire un interfaccia per la realizzazione di famiglie di oggetti correlati o dipendenti fra di loro, senza dover specificare le loro classi concrete.
+
+		Risulta un paradigma utile in contesti in cui le classi concrete da utilizzare cambiano in blocco, e si vuole quindi delegare la creazione non di un singolo oggetto, ma di una loro famiglia, a un singolo \textit{factory method}.
+
+Vediamo quindi un esempio di due oggetti, che vogliamo poter renderizzare su PDF e su HTML:
+\begin{lstlisting}[language=java, style=codestyle]
+// istanze astratte
+
+interface Paragraph {
+	void show();
+}
+
+interface Table {
+	void show();
+}
+
+// istanze concrete PDF
+
+class ParagraphPDF implements Paragraph {
+	void show() {
+		// ...
+	}
+}
+
+class TablePDF implements Table {
+	void show() {
+		// ...
+	}
+}
+
+// istanze concrete HTML
+
+class ParagraphHTML implements Paragraph {
+	void show() {
+		// ...
+	}
+}
+
+class TableHTML implements Table {
+	void show() {
+		// ...
+	}
+}
+\end{lstlisting}
+
+Per creare un documento, vorremo quindi usare più factory relative a documenti PDF e HTML, che ineritano dalla stessa \textit{abstract factory}:
+\begin{lstlisting}[language=java, style=codestyle]	
+// costruttore astratto
+interface DocumentFactory {
+	Paragraph createParagraph();
+	Table createTable();
+}
+
+// costruttore concreto PDF
+class DocumentFactoryPDF implements DocumentFactory {
+	Paragraph createParagraph() {
+		return new ParagraphPDF();
+	}
+	Table createTable() {
+		return new TablePDF();
+	}
+}
+
+// costruttore concreto HTML 
+class DocumentFactoryHTML implements DocumentFactory {
+	Paragraph createParagraph() {
+		return new ParagraphHTML();
+	}
+	Table createTable() {
+		return new TableHTML();
+	}
+}
+\end{lstlisting}
+
+A questo punto creare un nuovo documento di tipo PDF o HTML sarà molto semplice, in quanto basterà dire:
+\begin{lstlisting}[language=java, style=codestyle]
+class Document {
+	private Paragraph p;
+	private Table t;
+
+	public Document(DocumentFactory factory) {
+		p = factory.createParagraph();
+		t = factory.createTable();
+	}
+
+	public void show() {
+		p.show();
+		t.show();
+	}
+}
+
+// creiamo un documento PDF
+DocumentFactory factory = new DocumentFactoryPDF();
+Document doc = new Document(factory);
+\end{lstlisting}
+
 	\item \textbf{Builder}: consiste nel separare la costruzione di un'oggetto complesso dalla sua rappresentazione. Risulta utile quando è necessario fornire un numero molto grande di parametri in fase di costruzione.
 
 Vediamo ad esempio una classe computer piuttosto complessa:
@@ -519,7 +614,41 @@ public class Esempio {
 		}
 }
 \end{lstlisting}
-	\item \textbf{Prototype}:
+\item \textbf{Prototype}: qui vogliamo specificare i tipi di oggetti che vogliamo creare non come classi, ma sulla base di determinati oggetti predefiniti detti \textit{prototipi}. In Java, questo è possibile attraverso l'interfaccia \textit{Cloneable}, un interfaccia \textit{marker} (lo è ad esempio anche \textit{Serializable}), che segnala che un oggetto è clonabile attraverso il metodo \lstinline|clone()| della classe \textit{Object}. Notiamo che \lstinline|clone()| fa la \textit{shallow copy}.
+
+Vediamo un esempio anche di questo pattern:
+\begin{lstlisting}[language=java, style=codestyle]	
+public class Shape2D implements Cloneable {
+	private int size;
+	private String color;
+	
+	public Shape2D(int size, String color) {
+		this.size = size;
+		this.color = color;
+	}
+
+	public void draw() {
+		System.out.println("Drawing a 2D shape with size "
+			+ size + " and color " + color);
+	}
+
+	@Override
+	public Shape2D clone() throws CloneNotSupportedException {
+		return (Shape2D) super.clone(); // shallow copy 
+	}
+
+	public static void main(String[] args) {
+		Shape2D original = new Shape2D(10, "red");
+		try {
+			Shape2D copy = original.clone();
+			original.draw();
+			copy.draw();
+		} catch (CloneNotSupportedException e) {
+			System.err.println("Error during cloning");
+		}
+	}
+}
+\end{lstlisting}
 \end{itemize}
 
 \end{document}

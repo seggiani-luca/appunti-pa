@@ -1,0 +1,916 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[a4paper, margin=8em]{geometry}
+
+% usa i pacchetti per la scrittura in italiano
+\usepackage[french,italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\frenchspacing 
+
+% usa i pacchetti per la formattazione matematica
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+
+% usa altri pacchetti
+\usepackage{gensymb}
+\usepackage{hyperref}
+\usepackage{standalone}
+
+\usepackage{colortbl}
+
+\usepackage{xstring}
+\usepackage{karnaugh-map}
+
+% imposta il titolo
+\title{Appunti Programmazione Avanzata}
+\author{Luca Seggiani}
+\date{2025}
+
+% imposta lo stile
+% usa helvetica
+\usepackage[scaled]{helvet}
+% usa palatino
+\usepackage{palatino}
+% usa un font monospazio guardabile
+\usepackage{lmodern}
+
+\renewcommand{\rmdefault}{ppl}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\ttdefault}{lmtt}
+
+% circuiti
+\usepackage{circuitikz}
+\usetikzlibrary{babel}
+
+% testo cerchiato
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+% disponi il titolo
+\makeatletter
+\renewcommand{\maketitle} {
+	\begin{center} 
+		\begin{minipage}[t]{.8\textwidth}
+			\textsf{\huge\bfseries \@title} 
+		\end{minipage}%
+		\begin{minipage}[t]{.2\textwidth}
+			\raggedleft \vspace{-1.65em}
+			\textsf{\small \@author} \vfill
+			\textsf{\small \@date}
+		\end{minipage}
+		\par
+	\end{center}
+
+	\thispagestyle{empty}
+	\pagestyle{fancy}
+}
+\makeatother
+
+% disponi teoremi
+\usepackage{tcolorbox}
+\newtcolorbox[auto counter, number within=section]{theorem}[2][]{%
+	colback=blue!10, 
+	colframe=blue!40!black, 
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries, 
+	title=Teorema~\thetcbcounter: #2, 
+	#1
+}
+
+% disponi definizioni
+\newtcolorbox[auto counter, number within=section]{definition}[2][]{%
+	colback=red!10,
+	colframe=red!40!black,
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries,
+	title=Definizione~\thetcbcounter: #2,
+	#1
+}
+
+% disponi codice
+\usepackage{listings}
+\usepackage[table]{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{codestyle}{
+		backgroundcolor=\color{black!5}, 
+		commentstyle=\color{codegreen},
+		keywordstyle=\bfseries\color{magenta},
+		numberstyle=\sffamily\tiny\color{black!60},
+		stringstyle=\color{green!50!black},
+		basicstyle=\ttfamily\footnotesize,
+		breakatwhitespace=false,         
+		breaklines=true,                 
+		captionpos=b,                    
+		keepspaces=true,                 
+		numbers=left,                    
+		numbersep=5pt,                  
+		showspaces=false,                
+		showstringspaces=false,
+		showtabs=false,                  
+		tabsize=2
+}
+
+\lstdefinestyle{shellstyle}{
+		backgroundcolor=\color{black!5}, 
+		basicstyle=\ttfamily\footnotesize\color{black}, 
+		commentstyle=\color{black}, 
+		keywordstyle=\color{black},
+		numberstyle=\color{black!5},
+		stringstyle=\color{black}, 
+		showspaces=false,
+		showstringspaces=false, 
+		showtabs=false, 
+		tabsize=2, 
+		numbers=none, 
+		breaklines=true
+}
+
+
+\lstdefinelanguage{assembler}{ 
+  keywords={AAA, AAD, AAM, AAS, ADC, ADCB, ADCW, ADCL, ADD, ADDB, ADDW, ADDL, AND, ANDB, ANDW, ANDL,
+        ARPL, BOUND, BSF, BSFL, BSFW, BSR, BSRL, BSRW, BSWAP, BT, BTC, BTCB, BTCW, BTCL, BTR, 
+        BTRB, BTRW, BTRL, BTS, BTSB, BTSW, BTSL, CALL, CBW, CDQ, CLC, CLD, CLI, CLTS, CMC, CMP,
+        CMPB, CMPW, CMPL, CMPS, CMPSB, CMPSD, CMPSW, CMPXCHG, CMPXCHGB, CMPXCHGW, CMPXCHGL,
+        CMPXCHG8B, CPUID, CWDE, DAA, DAS, DEC, DECB, DECW, DECL, DIV, DIVB, DIVW, DIVL, ENTER,
+        HLT, IDIV, IDIVB, IDIVW, IDIVL, IMUL, IMULB, IMULW, IMULL, IN, INB, INW, INL, INC, INCB,
+        INCW, INCL, INS, INSB, INSD, INSW, INT, INT3, INTO, INVD, INVLPG, IRET, IRETD, JA, JAE,
+        JB, JBE, JC, JCXZ, JE, JECXZ, JG, JGE, JL, JLE, JMP, JNA, JNAE, JNB, JNBE, JNC, JNE, JNG,
+        JNGE, JNL, JNLE, JNO, JNP, JNS, JNZ, JO, JP, JPE, JPO, JS, JZ, LAHF, LAR, LCALL, LDS,
+        LEA, LEAVE, LES, LFS, LGDT, LGS, LIDT, LMSW, LOCK, LODSB, LODSD, LODSW, LOOP, LOOPE,
+        LOOPNE, LSL, LSS, LTR, MOV, MOVB, MOVW, MOVL, MOVSB, MOVSD, MOVSW, MOVSX, MOVSXB,
+        MOVSXW, MOVSXL, MOVZX, MOVZXB, MOVZXW, MOVZXL, MUL, MULB, MULW, MULL, NEG, NEGB, NEGW,
+        NEGL, NOP, NOT, NOTB, NOTW, NOTL, OR, ORB, ORW, ORL, OUT, OUTB, OUTW, OUTL, OUTSB, OUTSD,
+        OUTSW, POP, POPL, POPW, POPB, POPA, POPAD, POPF, POPFD, PUSH, PUSHL, PUSHW, PUSHB, PUSHA, 
+				PUSHAD, PUSHF, PUSHFD, RCL, RCLB, RCLW, MOVSL, MOVSB, MOVSW, STOSL, STOSB, STOSW, LODSB, LODSW,
+				LODSL, INSB, INSW, INSL, OUTSB, OUTSL, OUTSW
+        RCLL, RCR, RCRB, RCRW, RCRL, RDMSR, RDPMC, RDTSC, REP, REPE, REPNE, RET, ROL, ROLB, ROLW,
+        ROLL, ROR, RORB, RORW, RORL, SAHF, SAL, SALB, SALW, SALL, SAR, SARB, SARW, SARL, SBB,
+        SBBB, SBBW, SBBL, SCASB, SCASD, SCASW, SETA, SETAE, SETB, SETBE, SETC, SETE, SETG, SETGE,
+        SETL, SETLE, SETNA, SETNAE, SETNB, SETNBE, SETNC, SETNE, SETNG, SETNGE, SETNL, SETNLE,
+        SETNO, SETNP, SETNS, SETNZ, SETO, SETP, SETPE, SETPO, SETS, SETZ, SGDT, SHL, SHLB, SHLW,
+        SHLL, SHLD, SHR, SHRB, SHRW, SHRL, SHRD, SIDT, SLDT, SMSW, STC, STD, STI, STOSB, STOSD,
+        STOSW, STR, SUB, SUBB, SUBW, SUBL, TEST, TESTB, TESTW, TESTL, VERR, VERW, WAIT, WBINVD,
+        XADD, XADDB, XADDW, XADDL, XCHG, XCHGB, XCHGW, XCHGL, XLAT, XLATB, XOR, XORB, XORW, XORL},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{\#},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{language=java, style=codestyle}
+
+% disponi sezioni
+\usepackage{titlesec}
+
+\titleformat{\section}
+	{\sffamily\Large\bfseries} 
+	{\thesection}{1em}{} 
+\titleformat{\subsection}
+	{\sffamily\large\bfseries}   
+	{\thesubsection}{1em}{} 
+\titleformat{\subsubsection}
+	{\sffamily\normalsize\bfseries} 
+	{\thesubsubsection}{1em}{}
+
+% tikz
+\usepackage{tikz}
+
+% float
+\usepackage{float}
+
+% grafici
+\usepackage{pgfplots}
+\pgfplotsset{width=10cm,compat=1.9}
+
+% disponi alberi
+\usepackage{forest}
+
+\forestset{
+	rectstyle/.style={
+		for tree={rectangle,draw,font=\large\sffamily}
+	},
+	roundstyle/.style={
+		for tree={circle,draw,font=\large}
+	}
+}
+
+% disponi algoritmi
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\makeatletter
+\renewcommand{\ALG@name}{Algoritmo}
+\makeatother
+
+% disponi numeri di pagina
+\usepackage{fancyhdr}
+\fancyhf{} 
+\fancyfoot[L]{\sffamily{\thepage}}
+
+\makeatletter
+\fancyhead[L]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@title \ \@date}}} 
+\fancyhead[R]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@author}}}
+\makeatother
+
+\begin{document}
+% sezione (data)
+\section{Lezione del 09-12-25}
+
+% stili pagina
+\thispagestyle{empty}
+\pagestyle{fancy}
+
+% testo
+Continuiamo l'argomento dei design pattern.
+
+\subsubsection{Pattern strutturali}
+Dopo i pattern \textit{creazionali}, iniziamo a parlare dei pattern \textbf{strutturali}. Questi riguardano la \textit{composizione} di oggetti.
+Un principio spesso usato è il \textit{composition over inheritance}, che consiglia di preferire la composizione di oggetti all’ereditarietà per ridurre l’accoppiamento tra le classi e migliorare la modularità dei sistemi.
+
+Questi pattern, quindi, sono:
+\begin{itemize}
+	\item \textbf{Adapter}: usato per convertire l'interfaccia di una classe in un'altra interfaccia, che chi usa la classe si aspetta. Risulta utile quando vogliamo riutilizzare classi esistenti all’interno di un nuovo sistema senza modificare né le classi originali né il codice che usa la classe.
+
+		Vediamo ad esempio un lettore audio, per cui vogliamo adottare una certa classe \textit{OldAudioReader} a supporto di una certa interfaccia \textit{NewAudioReader}:
+\begin{lstlisting}[language=java, style=codestyle]	
+class OldAudioReader {
+		public void play() {
+			// ...
+		}
+}
+
+interface NewAudioReader {
+		void playMedia();
+}
+
+// adattatore
+class OldAudioReaderAdapter implements NewAudioReader {
+	private OldAudioReader reader;
+	public OldAudioReaderAdapter(OldAudioReader reader) {
+		this.reader = reader;
+	}
+	@Override
+	public void playMediaMedia() {
+		reader.play(); // adattiamo il metodo esistente
+	}
+}
+\end{lstlisting}
+
+	\item \textbf{Bridge}: l'obiettivo di questo pattern è disaccoppiare un'astrazione dalla sua implementazione in modo che queste possano variare indipendentemente.
+
+		Ad esempio, nel progettare un’interfaccia grafica portabile, poniamo di volere un’astrazione Window che funzioni sia su X Window System che su IBM Presentation Manager (PM). Un approccio basato su ereditarietà potrebbe definire una classe astratta Window e due sottoclassi, XWindow e PMWindow, per i diversi sistemi.
+		Questo approccio presenta però 2 problemi:
+		\begin{itemize}
+			\item Risulta difficile estendere l’astrazione Window per supportare nuovi tipi di finestre o nuove piattaforme;
+			\item Per ogni nuova combinazione (es. IconWindow per finestre con icone) e piattaforma, bisogna creare più classi specifiche (XIconWindow, PMIconWindow, ecc.). Ogni nuova piattaforma moltiplica il numero di classi necessarie.
+		\end{itemize}
+
+		Vediamo quindi di usare un approccio alternativo, dove una sola classe può sfruttare più \textit{implementor}, cioè interfacce che espongono funzioni di basso livello da ciascuna delle API:
+\begin{lstlisting}[language=java, style=codestyle]	
+// impementor astratto
+interface DrawingAPI {
+		void drawWindow();
+}
+
+// implementor concreti
+
+class XDrawingAPI {
+		public void drawWindow() {
+			// ...
+		}
+}
+
+class IBMDrawingAPI {
+		public void drawWindow() {
+			// ...
+		}
+}
+
+// classe vera e propria
+class Window {
+		private DrawingAPI api;
+
+		public Window(DrawingApi api) {
+			this.api = api;
+		}
+
+		public void draw() {
+			// basso livello
+			api.drawWindow();
+		}
+
+		public void resize() {
+			// alto livello
+			// ...
+		}
+}
+\end{lstlisting}
+
+A questo punto sarà semplice creare oggetti \textit{Window} che si appoggiano all'una o l'altra API, come segue:
+\begin{lstlisting}[language=java, style=codestyle]	
+Window XWindow = new Window(new XDrawingAPI());
+Window IBMWindow = new Window(new IBMDrawingAPI());
+\end{lstlisting}
+
+\item \textbf{Composite}: l'idea è di comporre oggetti in strutture ad albero che rappresentano gerarchie parti-complesso. In questo modo si possono trattare collezioni di oggetti, o loro singole istanze, in maniera uniforme.
+	La chiave di questo pattern è quindi una classe astratta che rappresenta sia degli oggetti \textit{primitivi}, che dei \textit{container} di tali oggetti.
+
+	L'esempio più semplice è quello di un file system, dove sia i file (\textit{foglie} o \textit{oggetti primitivi}) che le directory (\textit{compositi} o \textit{collezioni di oggetti}) sono istanze di una sola classe \textit{FSNode}:
+\begin{lstlisting}[language=java, style=codestyle]	
+// interfaccia base di file e directory 
+interface FSNode {
+  String getName();
+  int getSize(); // in KB
+  void print(String indent);
+  
+  // operazioni di composizione: default "non supportate" per le foglie
+  default void add(FSNode node) {
+    throw new UnsupportedOperationException(
+        getClass().getSimpleName() + " is a leaf");
+  }
+  default void remove(FSNode node) {
+    throw new UnsupportedOperationException(
+        getClass().getSimpleName() + " is a leaf");
+  }
+}
+
+// leaf (file)
+class FileLeaf implements FSNode {
+  private final String name;
+  private final int sizeKB;
+  
+  FileLeaf(String name, int sizeKB) {
+    this.name = name;
+    this.sizeKB = sizeKB;
+  }
+  public String getName() {
+    return name;
+  }
+  public int getSize() {
+    return sizeKB;
+  }
+  public void print(String indent) {
+    System.out.printf("%s- %s (%d KB)%n", indent, name, sizeKB);
+  }
+}
+
+// composite (directory)
+class Directory implements FSNode {
+  private final String name;
+  private final List<FSNode> children = new ArrayList<>();
+  
+  Directory(String name) {
+    this.name = name;
+  }
+  public String getName() {
+    return name;
+  }
+  public int getSize() {
+    // somma delle dimensioni dei figli
+    return children.stream().mapToInt((e) -> e.getSize()).sum();
+  }
+  public void add(FSNode node) {
+    children.add(node);
+  }
+  public void remove(FSNode node) {
+    children.remove(node);
+  }
+  public void print(String indent) {
+    System.out.printf("%s+ %s/ (%d KB)%n", indent, name, getSize());
+    String childIndent = indent + " ";
+    for (FSNode c : children) {
+      c.print(childIndent);
+    }
+  }
+}
+\end{lstlisting}
+
+\item \textbf{Decorator}: questo è un pattern che si usa per aggiungere funzionalità, in maniera dinamica, a oggetti preesistenti.
+	Forniscono quindi un alternativa alle sottoclassi per la gestione di funzionalità aggiuntive, quando vogliamo dare più responsabilità a singoli oggetti, e non ad intere classi.
+
+	Torniamo all'esempio delle interfacce grafiche. Magari il nostro toolkit vuole fornire la possibilità di rendere qualsiasi componente \textit{cliccabile} o \textit{scrollabile}.
+
+	Una soluzione semplice potrebbe essere quella di creare classi figlie di ogni componente, scrollabili e cliccabili.
+
+	Un'alternativa è quella di \textit{"avvolgere"} gli oggetti componente in altri oggetti, detti decoratori. I decoratori si conformano all'interfaccia degli oggetti che decorano, così da essere trasparenti agli utenti della classe.
+
+Vediamo quindi un esempio:
+\begin{lstlisting}[language=java, style=codestyle]	
+// componente base
+interface Text {
+	String render();
+}
+
+// implementazione concreta
+class PlainText implements Text {
+	private final String content;
+
+	PlainText(String content) {
+		this.content = content;
+	}
+	public String render() {
+		return content;
+	}
+}
+
+// classe base del decoratore, stessa interfaccia
+abstract class TextDecorator implements Text {
+	protected final Text inner;
+	
+	TextDecorator(Text inner) {
+		this.inner = inner;
+	}
+
+	// possiamo ridefinire questo metodo!
+	public abstract String render();
+}
+
+// decoratori concreti
+
+class BoldDecorator extends TextDecorator {
+	BoldDecorator(Text inner) {
+		super(inner);
+	}
+	public String render() {
+		return "<b>" + inner.render() + "</b>";
+	}
+}
+
+class ItalicDecorator extends TextDecorator {
+	ItalicDecorator(Text inner) {
+		super(inner);
+	}
+	public String render() {
+		return "<i>" + inner.render() + "</i>";
+	}
+}
+\end{lstlisting}
+
+\item \textbf{Facade}: l'intento è di fornire un interfaccia unificata ad un insieme di interfacce in un sottosistema. In breve, una facade fornisce un interfaccia di livello più alto che rende l'intero sottosistema più semplice da usare.
+
+Prendiamo l'esempio di un emulatore, che contiene più componenti:
+\begin{lstlisting}[language=java, style=codestyle]	
+// componente astratto
+abstract class SimulationComponent {
+	void simulate();
+}
+
+// componenti concreti
+
+class Bus extends SimulationComponent {
+	// ...
+}
+class Memory extends SimulationComponent {
+	// ...
+}
+class Processor extends SimulationComponent {
+	// ...
+}
+
+// simulazione concreta, rappresenta la facade del sistema
+class Simulation {
+	Bus bus;
+	Memory mem;
+	Processor proc;
+
+	public Simulation(Bus bus, Memory mem, Processor proc) {
+		this.bus = bus;
+		this.mem = mem;
+		this.proc = proc;
+	}
+
+	public void step() {
+		// la facade nasconde la complessita'
+		bus.step();
+		mem.step();
+		proc.step();
+	}
+}
+\end{lstlisting}
+
+\item \textbf{Flyweight}: utile quando abbiamo un grande numero di oggetti che
+condividono caratteristiche immutabili: decidiamo di utilizzare la condivisione delle risorse per risparmiare memoria.
+Sostanzialmente, quindi, l'approccio è simile a quello del \textit{pooling}.
+
+Vediamo ad esempio un sistema che gestisce più caselle, che possono condividere lo stesso tipo:
+\begin{lstlisting}[language=java, style=codestyle]	
+// stato condiviso
+record TileType(String texture, int movementCost) { }
+
+// fabbrica di flyweight
+class TileTypeFactory {
+    private static final Map<String, TileType> cache = new HashMap<>();
+
+    static TileType get(String texture, int cost) {
+        return cache.computeIfAbsent(texture, k -> new TileType(texture, cost));
+    }
+}
+
+// stato univoco: ottieniamo TileType condiviso dalla fabbrica 
+record Tile(int x, int y, TileType type) { }
+\end{lstlisting}
+
+\item \textbf{Proxy}: qui vogliamo fornire un oggetto "fittizio", che fa da segnaposto per un altro oggeto. Il proxy può svolgere alcune funzioni:
+\begin{itemize}
+	\item Permettere di raggiungere oggetti in altri spazi di indirizzamento;
+	\item Controllare gli accessi agli oggett che rappresenta;
+	\item Rappresentare un oggetto costoso e crearlo solo quando necessario (\textit{lazy instantiation} o \textit{lazy loading} (se ci sono accessi al disco)).
+\end{itemize}
+
+Un esempio di applicazione di questo pattern, tornando all'esempio del rendering dei documenti, è per gestire una classe \textit{Image}, che va istanziata solo quando è effettivamente necessario disegnarla, ed è nel frattempo sostituita da un proxy. 
+\begin{lstlisting}[language=java, style=codestyle]	
+// interfaccia comune
+interface Image {
+	void display();
+}
+
+// classe reale (costosa da caricare)
+class RealImage implements Image { 
+	private final String filename;
+	
+	public RealImage(String filename) {
+		this.filename = filename;
+		loadFromDisk();
+	}
+	private void loadFromDisk() {
+		System.out.println("Loading image from disk: " + filename);
+	}
+	public void display() {
+		System.out.println("Displaying image: " + filename);
+	}
+}
+
+// classe proxy
+class ImageProxy implements Image {
+	private final String filename;
+	private RealImage realImage; // inizialmente null
+	
+	public ImageProxy(String filename) {
+		this.filename = filename;
+	}
+	public void display() {
+		if (realImage == null) { // lazy loading
+			realImage = new RealImage(filename);
+		}
+		realImage.display();
+	}
+}
+\end{lstlisting}
+
+\end{itemize}
+
+\subsubsection{Pattern comportamentali}
+Come ultima categoria di design pattern, parliamo dei pattern \textbf{comportamentali}. Questi riguardano il modo con cui gli oggetti interagiscono e si scambiano informazioni.
+
+Sono, in particolare:
+\begin{itemize}
+	\item \textbf{Chain of responsibility}: consiste nell'evitare di accoppiare la responsabilità di una richiesta al ricevitore di una richiesta, dando a più di un oggetto la possibilità di gestire tale richiesta. Quando arriva una richiesta, quindi, ogni gestore decide cosa fare e se necessario propagare la richiesta a altri gestori.
+
+Vediamo ad esempio un videogioco dove un giocatore può subire danno, e questo danno può essere elaborato sulla base di più fattori (difficoltà del gioco, presenza o meno di armatura, ecc...)
+\begin{lstlisting}[language=java, style=codestyle]	
+class DamageRequest {
+  public double amount;
+  DamageRequest(double amount) {
+    this.amount = amount;
+  }
+}
+
+// handler astratto
+abstract class DamageHandler {
+  protected DamageHandler next;
+  public DamageHandler setNext(DamageHandler next) {
+    this.next = next;
+    return next;
+  }
+  public void handle(DamageRequest req) {
+    if (!process(req))
+      return; // se false, la catena si ferma
+    if (next != null)
+      next.handle(req);
+  }
+  // true se deve continuare la catena
+  protected abstract boolean process(DamageRequest req);
+}
+
+class ArmorHandler extends DamageHandler {
+  private final double armor; // riduce di un certo numero di punti il danno
+  ArmorHandler(double armor) {
+    this.armor = armor;
+  }
+  protected boolean process(DamageRequest req) {
+    double before = req.amount;
+    req.amount = Math.max(0, req.amount - armor);
+    System.out.println("[Armor] " + before + " -> " + req.amount);
+    return req.amount > 0; // se il danno e' 0, fermo la catena
+  }
+}
+
+class DifficultyHandler extends DamageHandler {
+  private final double difficultyMultiplier;
+  DifficultyHandler(double difficultyMultiplier) {
+    this.difficultyMultiplier = difficultyMultiplier;
+  }
+  protected boolean process(DamageRequest req) {
+    double before = req.amount;
+    req.amount = req.amount * difficultyMultiplier;
+    System.out.println("[Diff] " + before + " -> " + req.amount);
+    return true;
+  }
+}
+
+class Player {
+  private double hp = 100;
+  public void applyDamage(double dmg) {
+    hp -= dmg;
+    System.out.println(">> Player danneggiato " + dmg + ", HP = " + hp);
+  }
+}
+
+public class Example {
+  public static void main(String[] args) {
+    Player player = new Player();
+    // costruisco la catena: armor -> difficulty
+    DamageHandler chain = new ArmorHandler(5);
+    chain.setNext(new DifficultyHandler(1.5));
+    DamageRequest req = new DamageRequest(30);
+    System.out.println("Danno base: " + req.amount);
+    chain.handle(req);
+    player.applyDamage(req.amount);
+  }
+\end{lstlisting}
+
+\item \textbf{Command}: qui vogliamo incapsulare richieste all'interno di oggetti, permettendo di parametrizzare le richieste, metterle in code, e renderle annullabili.
+
+	Il comando incapsula l'operazione da compiere, e su chi operare (il ricevitore), ma non l'implementazione dell'operazione da compiere (quella starà nel ricevitore).
+
+	Vediamo ad esempio il classico gestionale bancario, dove prevediamo comandi di \textit{Deposit} e \textit{Withdraw} che operano su un certo oggetto ricevitore \textit{BankAccount}:
+\begin{lstlisting}[language=java, style=codestyle]	
+interface Command {
+  void execute();
+  void undo();
+}
+
+// oggetto ricevitore
+class BankAccount {
+  private int balance = 0;
+  
+  public void deposit(int amount) {
+    balance += amount;
+    System.out.println("Deposit " + amount + " => balance = " + balance);
+  }
+  public void withdraw(int amount) {
+    balance -= amount;
+    System.out.println("Withdraw " + amount + " => balance = " + balance);
+  }
+  public int getBalance() {
+    return balance;
+  }
+}
+
+class DepositCommand implements Command {
+  private final BankAccount account;
+  private final int amount;
+  
+  public DepositCommand(BankAccount account, int amount) {
+    this.account = account;
+    this.amount = amount;
+  }
+  public void execute() {
+    account.deposit(amount);
+  }
+  public void undo() {
+    account.withdraw(amount);
+  }
+}
+
+class WithdrawCommand implements Command {
+  private final BankAccount account;
+  private final int amount;
+  
+  public WithdrawCommand(BankAccount account, int amount) {
+    this.account = account;
+    this.amount = amount;
+  }
+  public void execute() {
+    account.withdraw(amount);
+  }
+  public void undo() {
+    account.deposit(amount);
+  }
+}
+
+class CommandManager {
+	// mettiamo i comandi in una pila 
+  private final Stack<Command> history = new Stack<>();
+  
+  public void run(Command cmd) {
+    cmd.execute();
+    history.push(cmd);
+  }
+  public void undo() {
+    if (history.isEmpty()) {
+      System.out.println("Nothing to undo");
+      return;
+    }
+    Command last = history.pop();
+    last.undo();
+  }
+}
+
+public class Example {
+  public static void main(String[] args) {
+    BankAccount account = new BankAccount();
+    CommandManager manager = new CommandManager();
+    manager.run(new DepositCommand(account, 100));
+    manager.run(new WithdrawCommand(account, 40));
+    manager.run(new DepositCommand(account, 50));
+    System.out.println(">> Undo last operation");
+    manager.undo();
+    System.out.println(">> Undo another operation");
+    manager.undo();
+    System.out.println("Final balance = " + account.getBalance());
+  }
+}
+\end{lstlisting}
+
+\item \textbf{Interpreter}: un interprete per un linguaggio permette di definire delle \textbf{DSL} (\textit{Domain Specific Language}), e avere un modo per interpretarle. 
+
+	L'implementazione degli \textit{interpreter} è simile a quella dei \textit{composite}, in quanto il modo più naturale per gestire grammatiche e attraverso strutture ad albero di dati nodi sintattici. La differenza principale dal composite è però che si definisce, appunto, una \textit{grammatica}, cioè una struttura specifica che l'albero che formiamo deve assumere.
+
+In un linguaggio come il Java, scrivere interpreti risulta molto semplice:
+\begin{lstlisting}[language=java, style=codestyle]	
+// espressione astratta
+interface Expression {
+	int interpret();
+}
+// espressione terminale (numero)
+class Number implements Expression {
+	private final int value;
+	
+	public Number(int value) {
+		this.value = value;
+	}
+	public int interpret() { return value; }
+}
+
+// espressioni non terminali: somma o sottrazione
+
+class Plus implements Expression {
+	private final Expression left, right;
+
+	public Plus(Expression left, Expression right) {
+		this.left = left;
+		this.right = right;
+	}
+	public int interpret() {
+		return left.interpret() + right.interpret();
+	}
+}
+
+class Minus implements Expression {
+	private final Expression left, right;
+
+	public Minus(Expression left, Expression right) {
+		this.left = left;
+		this.right = right;
+	}
+	public int interpret() {
+		return left.interpret() - right.interpret();
+	}
+}
+
+// ...
+\end{lstlisting}
+
+\item \textbf{Iterator}: gli iteratori, come già visti in C++, forniscono un modo per accedere agli elementi di un oggetto aggregato in maniera sequenziale, mascherando all'utente dell'iteratore il funzionamento di tale attraversamento sequenziale (e quindi fornendo un interfaccia unificata).
+
+\begin{lstlisting}[language=java, style=codestyle]	
+interface MyIterator<T> {
+  boolean hasNext();
+  T next();
+}
+
+class MyCollection<T> {
+  private List<T> l = new ArrayList<>();
+
+  public void add(T elem) {
+    l.add(elem);
+  }
+  public MyIterator<T> iterator() {
+    return new MyListIterator<>(l);
+  }
+}
+
+class MyListIterator<T> implements MyIterator<T> {
+  private List<T> list;
+  private int pos = 0;
+
+  public MyListIterator(List<T> list) {
+    this.list = list;
+  }
+  @Override
+  public boolean hasNext() {
+    return pos < list.size();
+  }
+  @Override
+  public T next() {
+    if (!hasNext()) {
+      throw new IllegalStateException("Non ci sono piu' elementi");
+    }
+    return list.get(pos++);
+  }
+}
+\end{lstlisting}
+
+\item \textbf{Mediator}: è un pattern dove gestiamo più oggetti che comunicano fra di loro attraverso un singolo oggetto mediatore. Permette di gestire un insieme di oggetti con molte relazioni oggetto-oggetto. 
+
+	In questo caso, anziché avere molte relazioni, ogni oggetto comunica solo con il mediatore. Riduce accoppiamento e semplifica manutenzione e evoluzione. La logica di comunicazione diventa centralizzata. Ad esempio, in una GUI, se un campo viene selezionato se ne deselezionano altri e così via...
+
+	Vediamo l'esempio di una chat room dove più utenti si scambiano messaggi comunicando con lo stesso mediatore:
+\begin{lstlisting}[language=java, style=codestyle]	
+interface ChatMediator {
+  void sendMessage(String msg, User sender);
+  void addUser(User user);
+}
+
+class ChatRoom implements ChatMediator {
+  private final List<User> users = new ArrayList<>();
+  @Override
+  public void addUser(User user) {
+    users.add(user);
+  }
+  @Override
+  public void sendMessage(String msg, User sender) {
+    for (User u : users) {
+      if (u != sender) {
+        u.receive(msg, sender.getName());
+      }
+    }
+  }
+}
+abstract class User {
+  protected ChatMediator mediator;
+  protected String name;
+  public User(ChatMediator mediator, String name) {
+    this.mediator = mediator;
+    this.name = name;
+    mediator.addUser(this);
+  }
+  public String getName() {
+    return name;
+  }
+  public abstract void send(String msg);
+  public abstract void receive(String msg, String from);
+}
+lass ChatUser extends User {
+  public ChatUser(ChatMediator mediator, String name) {
+    super(mediator, name);
+  }
+  @Override
+  public void send(String msg) {
+    System.out.println(name + " sends: " + msg);
+    mediator.sendMessage(msg, this);
+  }
+  @Override
+  public void receive(String msg, String from) {
+    System.out.println(name + " receives from " + from + ": " + msg);
+  }
+}
+public class Example {
+  public static void main(String[] args) {
+    ChatMediator mediator = new ChatRoom();
+    User mario = new ChatUser(mediator, "Mario");
+    User luigi = new ChatUser(mediator, "Luigi");
+    User peach = new ChatUser(mediator, "Peach");
+    mario.send("Ciao a tutti!");
+    luigi.send("Ciao!");
+    // ....
+  }
+}
+\end{lstlisting}
+
+# finisci 
+• Memento
+• Observer
+• State
+• Strategy
+• Template method
+• Visitor
+\end{itemize}
+
+\par\smallskip
+
+Notiamo che un pattern che è emerso finora è quello del \textit{programming against interfaces}: quello che vogliamo in genere fare è definire prima le interfacce, e poi le classi concrete che implementano tali interfacce.
+
+In questo modo, il codice degli utenti delle classi non dovrà cambiare: piuttosto, a cambiare sarà l'istanziazione delle classi concrete vere e proprie. 
+
+\end{document}
